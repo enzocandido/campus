@@ -1,36 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Campus
 
-## Getting Started
+Inspirado no Discord, Campus é uma plataforma social inovadora projetada para universitários, oferecendo funcionalidades avançadas de comunicação e gerenciamento de salas. Este projeto foi desenvolvido utilizando o framework Next.js.
 
-First, run the development server:
+## Recursos Principais
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Chat em Tempo Real:** Comunique-se com amigos e comunidades através de mensagens instantâneas. A interação é fluida e intuitiva, proporcionando uma experiência de conversa agradável.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Chamadas de Voz e Vídeo:** Estabeleça conexões mais profundas com chamadas de voz e vídeo de alta definição. Seja para conversas a dois ou em grupos, a qualidade de som e imagem é excepcional.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Gerenciamento de Salas e Canais:** Organize suas comunidades com facilidade, criando e administrando salas e canais. Controle o acesso e as funções dos membros para uma gestão eficaz.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+4. **Mensagens Diretas:** Interaja diretamente com os membros da sala. Inicie chamadas de áudio ou vídeo privadas com apenas um clique.
 
-## Learn More
+5. **Suporte a Mídias:** Enriqueça suas conversas compartilhando uma variedade de conteúdos multimídia, como imagens e PDFs.
 
-To learn more about Next.js, take a look at the following resources:
+6. **Emojis:** Dê vida às suas mensagens com uma extensa seleção de emojis.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Projeto baseado em: [Folks](https://github.com/enzocandido/folks).
