@@ -1,4 +1,3 @@
-// This is your Prisma schema file,
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,11 +8,17 @@ datasource db {
 }
 
 model User {
-  id          String @id @map("_id")
-  name        String
-  email       String @unique
-  imageUrl    String
-  role        String @default("user")
+  id       String @id @map("_id")
+  name     String
+  email    String @unique
+  imageUrl String
+  role     String @default("user")
+  academicRole AcademicRole @default(STUDENT)
+
+  ra         String?
+  course     String? 
+  university String? 
+  department String?
 
   servers  Server[]
   members  Member[]
@@ -23,12 +28,21 @@ model User {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
+enum AcademicRole {
+  STUDENT
+  PROFESSOR
+  ADMIN
+}
+
 model Server {
   id String @id @map("_id")
 
   name       String
   imageUrl   String
   inviteCode String @unique
+
+  course     String?
+  university String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Switch } from "@/components/ui/switch";
 
 import {
   Dialog,
@@ -27,19 +28,22 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/file-upload";
 
 const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Defina um nome para a sala.",
+  ra: z.string().optional(),
+  course: z.string().min(4, {
+    message: "Insira seu curso.",
   }),
-  imageUrl: z.string().min(1, {
-    message: "Insira uma imagem para a sala.",
+  university: z.string().min(4, {
+    message: "Insira o nome da sua faculdade.",
   }),
+  academicRole: z.boolean(),
+  department: z.string().optional(),
 });
 
 export const InitialModal = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isProfessor, setIsProfessor] = useState(false);
 
   const router = useRouter();
 
@@ -51,15 +55,27 @@ export const InitialModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      imageUrl: "",
+      ra: "",
+      course: "",
+      academicRole: false,
+      university: "",
+      department: "",
     },
   });
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("Formulário enviado", values);
+
     try {
-      await axios.post("/api/servers", values);
+      await axios.patch("/api/academic", {
+        ra: values.ra,
+        course: values.course,
+        university: values.university,
+        academicRole: values.academicRole,
+        department: values.department,
+      });
 
       form.reset();
       router.refresh();
@@ -78,45 +94,117 @@ export const InitialModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Crie uma nova sala
+            Bem-vindo(a) ao Campus!
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Personalize a sala. Você pode alterar as informações depois.
+            Insira seus dados acadêmicos.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">
+              <FormField
+                control={form.control}
+                name="academicRole"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-center rounded-lg">
+                    <div className="space-y-0.5">
+                      <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70 pr-4">
+                        Sou professor
+                      </FormLabel>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        className="data-[state=checked]:bg-indigo-500 data-[state=unchecked]:bg-zinc-500"
+                        checked={isProfessor}
+                        onCheckedChange={(checked) => {
+                          setIsProfessor(checked);
+                          field.onChange(checked);
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              {isProfessor ? (
                 <FormField
                   control={form.control}
-                  name="imageUrl"
+                  name="department"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                        Departamento
+                      </FormLabel>
                       <FormControl>
-                        <FileUpload
-                          endpoint="serverImage"
-                          value={field.value}
-                          onChange={field.onChange}
+                        <Input
+                          disabled={isLoading}
+                          className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                          placeholder="Insira seu departamento"
+                          {...field}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div>
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="ra"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                        RA (Registro do Aluno)
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={isLoading}
+                          className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                          placeholder="Insira seu RA"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <FormField
                 control={form.control}
-                name="name"
+                name="course"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                      Nome da sala
+                      Curso
                     </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Insira um nome para a sala"
+                        placeholder="Insira seu curso"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="university"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                      Faculdade
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        placeholder="Insira o nome da sua faculdade"
                         {...field}
                       />
                     </FormControl>
@@ -127,7 +215,7 @@ export const InitialModal = () => {
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant="primary" disabled={isLoading}>
-                Criar
+                Enviar
               </Button>
             </DialogFooter>
           </form>

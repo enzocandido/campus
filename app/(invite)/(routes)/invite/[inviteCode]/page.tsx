@@ -58,8 +58,6 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
   }
 
   return null;
-
-  return <div>sdadsa</div>;
 };
 
 export default InviteCodePage;
