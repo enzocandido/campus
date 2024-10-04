@@ -26,9 +26,19 @@ export const NavigationSidebar = async () => {
       },
     },
   });
+
+  const { academicRole } = (await db.user.findFirst({
+    where: {
+      id: profile.id,
+    },
+    select: {
+      academicRole: true,
+    },
+  })) || { academicRole: "" };
+
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#0a0a0a] bg-[#E3E5E8] py-3">
-      <NavigationAction />
+      <NavigationAction academicRole={academicRole} />
       <Separator className="h-[2px] bg-zinc-300 dark:bg-[#1f1f1f] rounded-md w-10 mx-auto" />
       <ScrollArea className="flex-1 w-full">
         {servers.map((server) => (

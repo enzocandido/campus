@@ -5,15 +5,28 @@ import { Plus } from "lucide-react";
 import { ActionTooltip } from "@/components/action-tooltip";
 import { useModal } from "@/hooks/use-modal-store";
 
-export const NavigationAction = () => {
+interface NavigationActionProps {
+  academicRole: string;
+}
+
+export const NavigationAction = ({ academicRole }: NavigationActionProps) => {
   const { onOpen } = useModal();
 
   return (
     <div>
-      <ActionTooltip side="right" align="center" className="hidden md:block" label="Adicione uma sala">
+      <ActionTooltip
+        side="right"
+        align="center"
+        className="hidden md:block"
+        label="Adicione uma sala"
+      >
         <button
           className="group flex items-center"
-          onClick={() => onOpen("createServer")}
+          onClick={() =>
+            onOpen(
+              academicRole === "PROFESSOR" ? "createServer" : "enterServer",
+            )
+          }
         >
           <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] group-hover:bg-emerald-500">
             <Plus
