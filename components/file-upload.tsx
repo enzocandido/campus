@@ -19,7 +19,13 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
   if (value && fileType !== "pdf") {
     return (
       <div className="relative h-20 w-20">
-        <Image fill sizes="(max-width: 768px) 150px, (max-width: 1200px) 150px" src={value} alt="Upload" className="rounded-full" />
+        <Image
+          fill
+          sizes="(max-width: 768px) 150px, (max-width: 1200px) 150px"
+          src={value}
+          alt="Upload"
+          className="rounded-full"
+        />
         <button
           onClick={() => onChange("")}
           className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
@@ -62,6 +68,20 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
       }}
       onUploadError={(error: Error) => {
         console.log(error);
+      }}
+      content={{
+        label() {
+          return "Escolha o arquivo ou arraste aqui";
+        },
+        button({ ready }) {
+          if (ready) return <div>Escolher arquivo</div>;
+          return "Preparando...";
+        },
+        allowedContent({ ready, fileTypes, isUploading }) {
+          if (!ready) return "Verificando permissões";
+          if (isUploading) return "Enviando...";
+          return `Arquivos permitidos: ${fileTypes.join(", ")}`;
+        },
       }}
     />
   );

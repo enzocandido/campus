@@ -75,9 +75,7 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                   <Input
                     disabled={isLoading}
                     className="px-14 py-6 bg-zinc-200/90 dark:bg-[#141414] border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
-                    placeholder={`Conversar em ${
-                      type === "conversation" ? name : "#" + name
-                    }`}
+                    placeholder={`Conversar em ${name}`}
                     {...field}
                   />
                   <div className="absolute top-7 right-8 flex items-center gap-2 mr-2">
@@ -86,7 +84,10 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                         field.onChange(`${field.value} ${emoji}`)
                       }
                     />
-                      <Send onClick={form.handleSubmit(onSubmit)} className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition cursor-pointer" />
+                    <Send
+                      onClick={form.handleSubmit(onSubmit)}
+                      className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition cursor-pointer"
+                    />
                   </div>
                 </div>
               </FormControl>

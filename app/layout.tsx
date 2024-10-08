@@ -19,7 +19,7 @@ const font = Open_Sans({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Campus",
   description:
-    "Jogar com amigos, conhecer novas pessoas e se divertir enquanto joga, tudo isso em um só lugar.",
+    "Plataforma de Interação e Comunicação para Ambientes Acadêmicos",
 };
 
 export default function RootLayout({
@@ -43,9 +43,7 @@ export default function RootLayout({
           >
             <SocketProvider>
               <ModalProvider />
-              <QueryProvider>
-                {children}
-              </QueryProvider>
+              <QueryProvider>{children}</QueryProvider>
             </SocketProvider>
           </ThemeProvider>
         </body>

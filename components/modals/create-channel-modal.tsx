@@ -136,7 +136,9 @@ export const CreateChannelModal = () => {
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Tipo de canal</FormLabel>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                      Tipo de canal
+                    </FormLabel>
                     <Select
                       disabled={isLoading}
                       onValueChange={field.onChange}
@@ -148,15 +150,19 @@ export const CreateChannelModal = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {Object.values(ChannelType).map((type) => (
-                          <SelectItem
-                            key={type}
-                            value={type}
-                            className="capitalize"
-                          >
-                            {type.toLowerCase()}
-                          </SelectItem>
-                        ))}
+                        {Object.values(ChannelType).map((type) => {
+                          const displayText =
+                            type === "TEXT" ? "Texto" : type.toLowerCase();
+                          return (
+                            <SelectItem
+                              key={type}
+                              value={type}
+                              className="capitalize"
+                            >
+                              {displayText}
+                            </SelectItem>
+                          );
+                        })}
                       </SelectContent>
                     </Select>
                     <FormMessage />

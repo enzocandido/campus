@@ -6,6 +6,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
+import i18n from "@emoji-mart/data/i18n/pt.json";
+
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import { useTheme } from "next-themes";
@@ -30,6 +32,7 @@ export const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
         className="bg-transparent border-none shadow-none drop-shadow-none mb-16"
       >
         <Picker
+          i18n={i18n}
           theme={resolvedTheme}
           data={data}
           onEmojiSelect={(emoji: any) => onChange(emoji.native)}
