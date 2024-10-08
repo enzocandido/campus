@@ -8,16 +8,16 @@ datasource db {
 }
 
 model User {
-  id       String @id @map("_id")
-  name     String
-  email    String @unique
-  imageUrl String
-  role     String @default("user")
+  id           String       @id @map("_id")
+  name         String
+  email        String       @unique
+  imageUrl     String
+  role         String       @default("user")
   academicRole AcademicRole @default(STUDENT)
 
   ra         String?
-  course     String? 
-  university String? 
+  course     String?
+  university String?
   department String?
 
   servers  Server[]
