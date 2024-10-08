@@ -17,7 +17,7 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
   const pathname = usePathname();
 
   const onClick = () => {
-    if(url !== "notifications") {
+    if (url !== "notifications") {
       router.push(`/${url}`);
     }
   };
@@ -27,9 +27,11 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
       <button onClick={onClick} className="group relative flex items-center">
         <div
           className={cn(
-            "absolute left-0 bg-primary rounded-r-full transition-all w-[4px]",
-            pathname !== `/${url}` && "group-hover:h-[20px]",
-            pathname === `/${url}` ? "h-[36px]" : "h-[8px]",
+            "absolute left-0 bg-primary rounded-r-full transition-all opacity-0 w-[4px]",
+            pathname !== `/${url}` &&
+              "group-hover:h-[20px] group-hover:opacity-100",
+            url === "notifications" ? "opacity-100" : "opacity-0",
+            pathname === `/${url}` ? "h-[36px] opacity-100" : "h-[8px]",
           )}
         />
         <div
@@ -39,7 +41,7 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
               "bg-primary/10 text-primary rounded-[16px]",
           )}
         >
-          {url === "profile" && <SquareMenu />}
+          {url === "dashboard" && <SquareMenu />}
           {url === "notifications" && <Bell />}
         </div>
       </button>

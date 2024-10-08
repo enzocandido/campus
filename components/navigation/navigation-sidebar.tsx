@@ -54,7 +54,7 @@ export const NavigationSidebar = async () => {
       <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
         <ModeToggle />
         <NavigationPage url="notifications" name="Notificações" />
-        <NavigationPage url="profile" name="Pagina de aluno" />
+        <NavigationPage url="dashboard" name="Painel Acadêmico" />
         <UserButton
           appearance={{
             elements: {
