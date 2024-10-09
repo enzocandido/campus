@@ -16,7 +16,6 @@ export async function GET() {
       },
     });
 
-    console.log("Usuários encontrados:", users);
     return NextResponse.json(users);
   } catch (error) {
     console.log("[USERS_GET]", error);

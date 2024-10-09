@@ -38,7 +38,6 @@ export const AdminUsers = () => {
         }));
 
         setUsers(mappedUsers);
-        console.log("Usuários setados:", mappedUsers);
       } catch (error) {
         console.error(error);
         toast({ title: "Erro", description: "Falha ao carregar os usuários." });
