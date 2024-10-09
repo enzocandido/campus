@@ -13,7 +13,8 @@ export type ModalType =
   | "editChannel"
   | "messageFile"
   | "deleteMessage"
-  | "enterServer";
+  | "enterServer"
+  | "createTask";
 
 interface ModalData {
   server?: Server;

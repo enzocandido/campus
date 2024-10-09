@@ -53,8 +53,9 @@ export const NavigationSidebar = async () => {
       </ScrollArea>
       <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
         <ModeToggle />
-        <NavigationPage url="notifications" name="Notificações" />
-        <NavigationPage url="dashboard" name="Painel Acadêmico" />
+        {profile.academicRole !== "ADMIN" && (
+          <NavigationPage url="dashboard" name="Painel Acadêmico" />
+        )}
         <UserButton
           appearance={{
             elements: {

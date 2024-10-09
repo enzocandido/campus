@@ -1,8 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { SquareMenu, Bell } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { SquareMenu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ActionTooltip } from "@/components/action-tooltip";
@@ -17,9 +16,7 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
   const pathname = usePathname();
 
   const onClick = () => {
-    if (url !== "notifications") {
-      router.push(`/${url}`);
-    }
+    router.push(`/${url}`);
   };
 
   return (
@@ -30,7 +27,6 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
             "absolute left-0 bg-primary rounded-r-full transition-all opacity-0 w-[4px]",
             pathname !== `/${url}` &&
               "group-hover:h-[20px] group-hover:opacity-100",
-            url === "notifications" ? "opacity-100" : "opacity-0",
             pathname === `/${url}` ? "h-[36px] opacity-100" : "h-[8px]",
           )}
         />
@@ -41,8 +37,7 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
               "bg-primary/10 text-primary rounded-[16px]",
           )}
         >
-          {url === "dashboard" && <SquareMenu />}
-          {url === "notifications" && <Bell />}
+          <SquareMenu />
         </div>
       </button>
     </ActionTooltip>

@@ -1,11 +1,13 @@
-import { NavigationSidebar } from "@/components/navigation/navigation-sidebar";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { DashboardGrid } from "@/components/dashboard/dashboard-grid";
 
-const Profile = () => {
+const Dashboard = () => {
   return (
-    <div className="h-full">
-    
+    <div>
+      <DashboardHeader />
+      <DashboardGrid />
     </div>
   );
 };
 
-export default Profile;
+export default Dashboard;

@@ -5,6 +5,7 @@ import { MemberRole, Server } from "@prisma/client";
 
 import {
   ChevronDown,
+  ClipboardList,
   LogOut,
   PlusCircle,
   Settings,
@@ -53,6 +54,15 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
+            onClick={() => onOpen("createTask", { server })}
+            className="px-3 py-2 text-sm cursor-pointer"
+          >
+            Adicionar tarefa
+            <ClipboardList className="h-4 w-4 ml-auto" />
+          </DropdownMenuItem>
+        )}
+        {isAdmin && (
+          <DropdownMenuItem
             onClick={() => onOpen("editServer", { server })}
             className="px-3 py-2 text-sm cursor-pointer"
           >
@@ -69,6 +79,7 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
             <Users className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
+
         {isModerator && (
           <DropdownMenuItem
             onClick={() => onOpen("createChannel", { server })}

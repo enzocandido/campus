@@ -37,8 +37,12 @@ const SetupPage = async () => {
   if (user?.course && user?.university) {
     if (user.academicRole === "PROFESSOR") {
       return <ProfessorServerModal />;
-    } else {
+    }
+    if (user.academicRole === "STUDENT") {
       return <StudentServerModal />;
+    }
+    if (user.academicRole === "ADMIN"){
+      return redirect(`/admin`);
     }
   }
 
