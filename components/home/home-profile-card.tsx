@@ -13,7 +13,7 @@ import { AvatarImage } from "../ui/avatar";
 import { Avatar } from "@radix-ui/react-avatar";
 import { Edit2 } from "lucide-react";
 
-interface DashboardProfileCardProps {
+interface HomeProfileCardProps {
   name: string;
   ra?: string;
   email: string;
@@ -22,29 +22,29 @@ interface DashboardProfileCardProps {
   course: string;
 }
 
-export const DashboardProfileCard = ({
+export const HomeProfileCard = ({
   name,
   ra,
   email,
   imageUrl,
   university,
   course,
-}: DashboardProfileCardProps) => {
+}: HomeProfileCardProps) => {
   return (
-    <div className="m-8">
-      <Card className="text-center">
+    <div className="w-full h-full">
+      <Card className="text-center md:flex items-center justify-around p-4">
         <CardHeader>
           <CardTitle>{name}</CardTitle>
           <CardDescription>{email}</CardDescription>
-        </CardHeader>
-        <CardContent>
           <Avatar className="flex justify-center">
             <AvatarImage
-              className="h-48 w-48 rounded-md"
+              className="h-64 w-64 rounded-md"
               src={imageUrl}
               alt={`Avatar de ${name}`}
             />
           </Avatar>
+        </CardHeader>
+        <CardContent className="items-center">
           <div className="mt-4 space-y-2">
             {ra && <p className="text-sm">RA: {ra}</p>}
             <p className="text-sm">Curso: {course}</p>

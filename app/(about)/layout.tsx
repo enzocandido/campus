@@ -1,4 +1,4 @@
-import Navbar from "@/components/auth-page/navbar";
+import Navbar from "@/components/navigation/navbar";
 
 const MainLayout = async ({ children }: { children: React.ReactNode }) => {
   return (

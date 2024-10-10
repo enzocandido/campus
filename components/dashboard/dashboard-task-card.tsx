@@ -15,7 +15,7 @@ interface DashboardTaskCardProps {
 
 export const DashboardTaskCard = ({ id, name }: DashboardTaskCardProps) => {
   return (
-    <div className="m-8">
+    <div>
       <Card className="text-center">
         <CardHeader>
           <CardTitle>Tarefas</CardTitle>
