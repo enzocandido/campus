@@ -28,13 +28,14 @@ export const AdminUsers = () => {
           throw new Error("Erro ao buscar os usuários.");
         }
         const data = await response.json();
+        console.log(data);
 
         const mappedUsers = data.map((user: any) => ({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          academicRole: user.academicRole,
-          imageUrl: user.imageUrl,
+          id: user.id || "",
+          name: user.name || "Sem Nome",
+          email: user.email || "Sem Email",
+          academicRole: user.academicRole || "Sem Cargo Acadêmico",
+          imageUrl: user.imageUrl || "",
         }));
 
         setUsers(mappedUsers);
@@ -47,7 +48,7 @@ export const AdminUsers = () => {
     };
 
     fetchUsers();
-  }, []);
+  }, [toast]);
 
   const handleDelete = async (userId: string) => {
     if (confirm("Tem certeza que deseja deletar este usuário?")) {
