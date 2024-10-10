@@ -31,6 +31,9 @@ export default function RootLayout({
     <ClerkProvider
       localization={ptBR}
       appearance={{
+        layout: {
+          termsPageUrl: '/terms',
+        },
         baseTheme: dark,
       }}
     >

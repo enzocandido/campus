@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { SquareMenu } from "lucide-react";
+import { HomeIcon, SquareMenu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ActionTooltip } from "@/components/action-tooltip";
@@ -32,12 +32,23 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
         />
         <div
           className={cn(
-            "flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] group-hover:bg-[#141414]",
+            "flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] group-hover:bg-emerald-500",
             pathname === `/${url}` &&
               "bg-primary/10 text-primary rounded-[16px]",
           )}
         >
-          <SquareMenu />
+          {url === "home" && (
+            <HomeIcon
+              className="group-hover:text-white transition text-emerald-500"
+              size={25}
+            />
+          )}
+          {url === "dashboard" && (
+            <SquareMenu
+              className="group-hover:text-white transition text-emerald-500"
+              size={25}
+            />
+          )}
         </div>
       </button>
     </ActionTooltip>

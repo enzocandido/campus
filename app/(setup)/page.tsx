@@ -20,7 +20,7 @@ const SetupPage = async () => {
   });
 
   if (existingServer) {
-    return redirect(`/servers/${existingServer.id}`);
+    return redirect(`/home`);
   }
 
   const user = await db.user.findFirst({
