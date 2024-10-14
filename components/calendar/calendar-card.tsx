@@ -8,17 +8,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-interface DashboardTaskCardProps {
+interface CalendarCardProps {
   id: string;
   name: string;
 }
 
-export const DashboardTaskCard = ({ id, name }: DashboardTaskCardProps) => {
+export const CalendarCard = ({ id, name }: CalendarCardProps) => {
   return (
     <div>
       <Card className="text-center">
         <CardHeader>
-          <CardTitle>Tarefas</CardTitle>
+          <CardTitle>Calendário</CardTitle>
           <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>

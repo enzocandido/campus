@@ -2,9 +2,9 @@ import { Menu } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { NavigationSidebar } from "../navigation/navigation-sidebar";
-import { DashboardSidebar } from "./dashboard-sidebard";
+import { TasksSidebar } from "./tasks-sidebard";
 
-export const DashboardHeader = () => {
+export const TasksHeader = () => {
   return (
     <div>
       <div className="flex justify-between text-center">
@@ -19,7 +19,7 @@ export const DashboardHeader = () => {
               <div className="w-[72px]">
                 <NavigationSidebar />
               </div>
-              <DashboardSidebar />
+              <TasksSidebar />
             </SheetContent>
           </Sheet>
         </div>

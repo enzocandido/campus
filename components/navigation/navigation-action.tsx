@@ -17,7 +17,7 @@ export const NavigationAction = ({ academicRole }: NavigationActionProps) => {
       <ActionTooltip
         side="right"
         align="center"
-        className="hidden md:block"
+        className="block"
         label="Adicione uma sala"
       >
         <button
