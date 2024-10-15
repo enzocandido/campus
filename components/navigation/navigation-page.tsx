@@ -32,26 +32,26 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
         />
         <div
           className={cn(
-            "flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] group-hover:bg-emerald-500",
+            "flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] dark:group-hover:bg-white group-hover:bg-black",
             pathname === `/${url}` &&
               "bg-primary/10 text-primary rounded-[16px]",
           )}
         >
           {url === "home" && (
             <HomeIcon
-              className="group-hover:text-white transition text-emerald-500"
+              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
               size={25}
             />
           )}
           {url === "tasks" && (
             <SquareMenu
-              className="group-hover:text-white transition text-emerald-500"
+              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
               size={25}
             />
           )}
           {url === "calendar" && (
             <Calendar
-              className="group-hover:text-white transition text-emerald-500"
+              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
               size={25}
             />
           )}
