@@ -28,9 +28,9 @@ export const NavigationAction = ({ academicRole }: NavigationActionProps) => {
             )
           }
         >
-          <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] group-hover:bg-emerald-500">
+          <div className="flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] dark:group-hover:bg-white group-hover:bg-black">
             <Plus
-              className="group-hover:text-white transition text-emerald-500"
+              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
               size={25}
             />
           </div>
