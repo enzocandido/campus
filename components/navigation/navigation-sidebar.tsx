@@ -39,9 +39,9 @@ export const NavigationSidebar = async () => {
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#0a0a0a] bg-[#E3E5E8] py-3">
       <NavigationPage url="home" name="Início" />
-      {profile.academicRole !== "ADMIN" && (
+      {/* {profile.academicRole !== "ADMIN" && (
         <NavigationPage url="tasks" name="Tarefas" />
-      )}
+      )} */}
       <NavigationPage url="calendar" name="Calendário" />
       <NavigationAction academicRole={academicRole} />
       <Separator className="h-[2px] bg-zinc-300 dark:bg-[#1f1f1f] rounded-md w-10 mx-auto" />

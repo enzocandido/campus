@@ -1,6 +1,6 @@
 import { currentProfile } from "@/lib/current-profile";
 import { auth } from "@clerk/nextjs/server";
-import { HomeWarnings } from "./home-warnings";
+// import { HomeWarnings } from "./home-warnings";
 import { HomeProfileCard } from "./home-profile-card";
 
 export const HomeGrid = async () => {
@@ -12,7 +12,7 @@ export const HomeGrid = async () => {
 
   return (
     <div className="flex-row md:flex md:w-full h-full justify-center items-center p-8 md:gap-10">
-      <HomeWarnings />
+      {/* <HomeWarnings /> */}
       <HomeProfileCard
         name={profile.name}
         ra={profile.ra || ""}
