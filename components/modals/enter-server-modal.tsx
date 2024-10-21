@@ -30,7 +30,7 @@ import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   link: z.string().min(1, {
-    message: "Insira um link ou UUID válido.",
+    message: "Insira um link válido.",
   }),
 });
 
@@ -66,11 +66,17 @@ export const EnterServerModal = () => {
       const urlParts = input.split("/");
       serverId = urlParts[urlParts.length - 1];
       if (!uuidPattern.test(serverId)) {
-        console.log("Formato de link inválido.");
+        form.setError("link", {
+          type: "manual",
+          message: "Formato de link inválido.",
+        });
         return;
       }
     } else {
-      console.log("Insira um link ou UUID válido.");
+      form.setError("link", {
+        type: "manual",
+        message: "Insira um link válido.",
+      });
       return;
     }
 
