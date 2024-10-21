@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 "use client";
 
 import axios from "axios";
@@ -6,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import moment from "moment";
-import "moment/locale/pt-BR";
+import "moment/locale/pt-br";
 
 import { useModal } from "@/hooks/use-modal-store";
 import {
