@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar } from "@/components/calendar/calendar";
 import { CalendarEventModal } from "@/components/calendar/calendar-event-modal";
 import { CalendarDeleteModal } from "@/components/calendar/calendar-delete-modal";
@@ -17,6 +17,20 @@ export default function Home() {
   const [showEventModal, setShowEventModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("/api/academic/tasks");
+        const data = await res.json();
+        setEvents(data);
+      } catch (error) {
+        console.error("Failed to fetch tasks:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const handleDateClick = (arg: { date: Date; allDay: boolean }) => {
     setNewEvent({
@@ -45,15 +59,11 @@ export default function Home() {
 
   return (
     <main className="p-8">
-      <div className="">
-        <div className="">
-          <Calendar
-            events={events}
-            onDateClick={handleDateClick}
-            onEventClick={handleEventClick}
-          />
-        </div>
-      </div>
+      <Calendar
+        events={events}
+        onDateClick={handleDateClick}
+        onEventClick={handleEventClick}
+      />
 
       <CalendarEventModal
         isOpen={showEventModal}

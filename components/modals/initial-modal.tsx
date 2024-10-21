@@ -69,7 +69,7 @@ export const InitialModal = () => {
     console.log("Formulário enviado", values);
 
     try {
-      await axios.patch("/api/academic", {
+      await axios.patch("/api/academic/profile", {
         ra: values.ra,
         course: values.course,
         university: values.university,
