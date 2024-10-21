@@ -8,8 +8,16 @@ body,
   height: 100%;
 }
 
+.dark .rdt input {
+  @apply bg-primary;
+}
+
 .fc .fc-toolbar-title {
   @apply font-semibold;
+}
+
+.fc * {
+  @apply dark:border-neutral-800 !important;
 }
 
 .fc .fc-button {
@@ -33,7 +41,7 @@ body,
 }
 
 .fc-theme-standard td {
-  @apply border-zinc-200 dark:border-zinc-400;
+  @apply border-zinc-200 dark:border-zinc-800;
 }
 
 .fc-day-other {

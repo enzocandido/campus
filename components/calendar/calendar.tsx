@@ -1,4 +1,5 @@
 "use client";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -15,6 +16,7 @@ export function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
   return (
     <FullCalendar
       locale={"pt-BR"}
+      timeZone="local"
       plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
       headerToolbar={{
         left: "prev,next today",
@@ -35,6 +37,11 @@ export function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
         list: "Lista",
       }}
       contentHeight={750}
+      slotLabelFormat={{
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: false,
+      }}
     />
   );
 }

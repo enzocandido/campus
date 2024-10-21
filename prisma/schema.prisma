@@ -24,6 +24,9 @@ model User {
   members  Member[]
   channels Channel[]
 
+  tasksCreated Task[]       @relation("ProfessorTasks")
+  submissions  Submission[] @relation("StudentSubmissions")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
@@ -167,4 +170,51 @@ model DirectMessage {
 
   @@index([memberId])
   @@index([conversationId])
+}
+
+model Task {
+  id          String     @id @map("_id")
+  title       String
+  description String?
+  fileUrl     String?
+  dueDate     DateTime
+  status      TaskStatus @default(PENDING)
+
+  professorId String?
+  professor   User?   @relation("ProfessorTasks", fields: [professorId], references: [id], onDelete: Cascade)
+
+  submissions Submission[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([professorId])
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+}
+
+model Submission {
+  id          String   @id @map("_id")
+  content     String?
+  fileUrl     String?
+  submittedAt DateTime @default(now())
+
+  studentId String
+  student   User   @relation("StudentSubmissions", fields: [studentId], references: [id], onDelete: Cascade)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  graded   Boolean @default(false)
+  feedback String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([studentId])
+  @@index([taskId])
 }

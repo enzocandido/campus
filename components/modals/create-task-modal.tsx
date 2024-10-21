@@ -3,11 +3,12 @@
 import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import moment from "moment";
+import "moment/locale/pt-BR";
 
 import { useModal } from "@/hooks/use-modal-store";
-
 import {
   Dialog,
   DialogContent,
@@ -16,7 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 import {
   Form,
   FormControl,
@@ -25,18 +25,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
+import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
+import { Calendar } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().min(1, {
-    message: "Defina um nome para a sala.",
-  }),
-  fileUrl: z.string().min(1, {
-    message: "Anexe um arquivo.",
-  }),
+  title: z
+    .string()
+    .min(1, "O título é obrigatório.")
+    .max(30, "O tamanho máximo para o título da tarefa é de 30 caracteres."),
+  description: z.string().optional(),
+  fileUrl: z.string().optional(),
+  dueDate: z.date(),
 });
 
 export const CreateTaskModal = () => {
@@ -48,8 +51,10 @@ export const CreateTaskModal = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      title: "",
+      description: "",
       fileUrl: "",
+      dueDate: new Date(),
     },
   });
 
@@ -57,8 +62,11 @@ export const CreateTaskModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      await axios.post("/api/academic/tasks", values);
+      router.refresh();
+      onClose();
     } catch (error) {
-      console.log(error);
+      console.error("Erro ao criar a tarefa:", error);
     }
   };
 
@@ -78,22 +86,23 @@ export const CreateTaskModal = () => {
             A tarefa estará disponível a todos os membros dessa sala.
           </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
               <FormField
                 control={form.control}
-                name="name"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                      Descrição da tarefa
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
+                      Título
                     </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Insira uma descrição"
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
+                        placeholder="Insira o título da tarefa"
                         {...field}
                       />
                     </FormControl>
@@ -101,28 +110,80 @@ export const CreateTaskModal = () => {
                   </FormItem>
                 )}
               />
-              <div className="flex items-center justify-center text-center">
-                <FormField
-                  control={form.control}
-                  name="fileUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <FileUpload
-                          endpoint="messageFile"
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
+                      Descrição
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
+                        placeholder="Descrição opcional"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="dueDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
+                      Data de Vencimento
+                    </FormLabel>
+                    <FormControl>
+                      <Controller
+                        control={form.control}
+                        name="dueDate"
+                        render={({ field: { onChange, value } }) => (
+                          <div className="relative">
+                            <Datetime
+                              value={moment(value)}
+                              onChange={(date) =>
+                                onChange(moment(date).toDate())
+                              }
+                              className="w-64 text-sm shadow rounded py-3 px-2 bg-primary text-zinc-500"
+                              locale="pt-BR"
+                            />
+                            <Calendar className="absolute left-52 top-1/2 transform -translate-y-1/2 w-6 h-6 text-zinc-500" />
+                          </div>
+                        )}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+
+            <FormField
+              control={form.control}
+              name="fileUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <FileUpload
+                      endpoint="messageFile"
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
             <DialogFooter className="bg-gray-100 px-6 py-4">
-              {/* <Button variant="primary" disabled={isLoading}> */}
-              <Button variant="primary" disabled>
-                Em desenvolvimento
+              <Button type="submit" variant="primary" disabled={isLoading}>
+                {isLoading ? "Enviando..." : "Criar Tarefa"}
               </Button>
             </DialogFooter>
           </form>
