@@ -12,6 +12,7 @@ const HowToUse = () => {
       faqs: [
         {
           question: "Como posso criar minha conta?",
+<<<<<<< HEAD
           answer: "Para criar uma conta, selecione 'Registre-se' na página inicial, insira seu e-mail, crie uma senha segura e complete os dados necessários."
         },
         {
@@ -27,29 +28,67 @@ const HowToUse = () => {
           answer: "Se precisar de ajuda, vá até a seção 'Suporte' na tela de login e preencha o formulário com seu nome, email e a mensagem. Nossa equipe responderá o mais breve possível."
         }
       ]
+=======
+          answer:
+            "Para criar uma conta, selecione 'Registre-se' na página inicial, insira seu e-mail, crie uma senha segura e complete os dados necessários.",
+        },
+        {
+          question: "Como redefino minha senha?",
+          answer:
+            "Se você esqueceu sua senha, selecione 'Esqueci a senha' na página de login. Um e-mail será enviado a você com instruções para definir uma nova senha.",
+        },
+        {
+          question:
+            "Como faço para editar minhas informações pessoais ou foto de perfil?",
+          answer:
+            "No canto inferior esquerdo, clique no ícone do seu perfil e selecione 'Editar Perfil'. Lá, você pode alterar seu nome, adicionar uma foto de perfil e modificar outras informações pessoais.",
+        },
+        {
+          question:
+            "O que devo fazer se encontrar problemas técnicos ou dúvidas?",
+          answer:
+            "Se precisar de ajuda, vá até a seção 'Suporte' na tela de login e preencha o formulário com seu nome, email e a mensagem. Nossa equipe responderá o mais breve possível.",
+        },
+      ],
+>>>>>>> 5d9d1fd8525496221a8ff2375c59d1c2a955a38b
     },
     {
       category: "Tarefas",
       faqs: [
         {
           question: "Como eu envio uma tarefa?",
+<<<<<<< HEAD
           answer: "Entre na seção 'Tarefas', escolha 'Enviar Tarefa', escolha o arquivo ou preencha as informações exigidas e pressione 'Enviar'."
         }
       ]
+=======
+          answer:
+            "Entre na seção 'Tarefas', escolha 'Enviar Tarefa', escolha o arquivo ou preencha as informações exigidas e pressione 'Enviar'.",
+        },
+      ],
+>>>>>>> 5d9d1fd8525496221a8ff2375c59d1c2a955a38b
     },
     {
       category: "Comunicação",
       faqs: [
         {
           question: "Como posso me comunicar com meus professores e colegas?",
+<<<<<<< HEAD
           answer: "Primeiramente, faça login no servidor da sua classe ou grupo. Depois, acesse 'Mensagens', selecione o membro com quem deseja interagir e envie sua mensagem diretamente."
         }
       ]
+=======
+          answer:
+            "Primeiramente, faça login no servidor da sua classe ou grupo. Depois, acesse 'Mensagens', selecione o membro com quem deseja interagir e envie sua mensagem diretamente.",
+        },
+      ],
+>>>>>>> 5d9d1fd8525496221a8ff2375c59d1c2a955a38b
     },
     {
       category: "Calendário",
       faqs: [
         {
+<<<<<<< HEAD
           question: "Como adicionar lembretes ou eventos importantes no calendário?",
           answer: "No menu principal, acesse 'Calendário'. Clique no dia desejado e selecione 'Adicionar Evento'. Insira o título do evento, horário e outras informações, como um lembrete. Clique em 'Salvar' para confirmar."
         },
@@ -58,6 +97,30 @@ const HowToUse = () => {
           answer: "Vá até 'Calendário' e clique no evento que deseja modificar. Selecione 'Editar' para alterar informações como data, horário ou descrição. Se quiser remover o evento, clique em 'Excluir'."
         }
       ]
+=======
+          question:
+            "Como adicionar lembretes ou eventos importantes no calendário?",
+          answer:
+            "No menu principal, acesse 'Calendário'. Clique no dia desejado e selecione 'Adicionar Evento'. Insira o título do evento, horário e outras informações, como um lembrete. Clique em 'Salvar' para confirmar.",
+        },
+        {
+          question: "Como posso alterar ou remover um evento que eu adicionei?",
+          answer:
+            "Vá até 'Calendário' e clique no evento que deseja modificar. Selecione 'Editar' para alterar informações como data, horário ou descrição. Se quiser remover o evento, clique em 'Excluir'.",
+        },
+      ],
+    },
+    {
+      category: "Compartilhamento",
+      faqs: [
+        {
+          question:
+            "Posso compartilhar arquivos ou materiais com outros alunos?",
+          answer:
+            "Sim. No menu de 'Salas', você pode anexar arquivos para compartilhar com seus colegas pelos canais. Basta clicar no ícone de '+' e escolher o arquivo desejado.",
+        },
+      ],
+>>>>>>> 5d9d1fd8525496221a8ff2375c59d1c2a955a38b
     },
     {
       category: "Compartilhamento",
@@ -77,10 +140,21 @@ const HowToUse = () => {
       </h1>
       <Accordion type="single" collapsible className="w-full">
         {faqs.map((faq, index) => (
+<<<<<<< HEAD
           <div key={index} className="mb-8"> {/* Espaçamento entre categorias */}
             <h2 className="text-xl font-semibold mb-4">{faq.category}</h2> {/* Título da categoria */}
             {faq.faqs.map((item, itemIndex) => (
               <AccordionItem key={itemIndex} value={`item-${index}-${itemIndex}`} className="mb-2"> {/* Espaçamento entre perguntas */}
+=======
+          <div key={index} className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">{faq.category}</h2>
+            {faq.faqs.map((item, itemIndex) => (
+              <AccordionItem
+                key={itemIndex}
+                value={`item-${index}-${itemIndex}`}
+                className="mb-2"
+              >
+>>>>>>> 5d9d1fd8525496221a8ff2375c59d1c2a955a38b
                 <AccordionTrigger>{item.question}</AccordionTrigger>
                 <AccordionContent>{item.answer}</AccordionContent>
               </AccordionItem>

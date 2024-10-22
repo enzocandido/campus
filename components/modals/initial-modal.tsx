@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
-
 import {
   Dialog,
   DialogContent,
@@ -25,17 +24,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+
+const courses = [
+  "Análise e Desenvolvimento de Sistemas",
+  "Segurança da Informação",
+  "Jogos Digitais",
+];
+const universities = ["FATEC São Caetano do Sul"];
 
 const formSchema = z.object({
-  ra: z.string().optional(),
-  course: z.string().min(4, {
-    message: "Insira seu curso.",
+  ra: z
+    .string()
+    .min(13, "O RA deve ter exatamente 13 caracteres.")
+    .max(13, "O RA deve ter exatamente 13 caracteres."),
+  course: z.string().min(1, {
+    message: "Selecione seu curso.",
   }),
-  university: z.string().min(4, {
-    message: "Insira o nome da sua faculdade.",
+  university: z.string().min(1, {
+    message: "Selecione sua faculdade.",
   }),
   academicRole: z.boolean(),
   department: z.string().optional(),
@@ -180,12 +195,21 @@ export const InitialModal = () => {
                       Curso
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Insira seu curso"
-                        {...field}
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0">
+                          <SelectValue placeholder="Selecione seu curso" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {courses.map((course) => (
+                            <SelectItem key={course} value={course}>
+                              {course}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -201,12 +225,21 @@ export const InitialModal = () => {
                       Faculdade
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                        placeholder="Insira o nome da sua faculdade"
-                        {...field}
-                      />
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0">
+                          <SelectValue placeholder="Selecione sua faculdade" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {universities.map((university) => (
+                            <SelectItem key={university} value={university}>
+                              {university}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
