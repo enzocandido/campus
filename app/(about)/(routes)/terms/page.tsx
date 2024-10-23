@@ -38,7 +38,7 @@ const Terms = () => {
         <h1 className="text-2xl">Termos de uso do Campus</h1>
         <div className="mt-2 font-light">
           {terms.map((term, index) => (
-            <div key={index} className="mb-4">
+            <div key={index} className="m-4 text-justify">
               <p>
                 <strong>
                   {index + 1}. {term.title}:
