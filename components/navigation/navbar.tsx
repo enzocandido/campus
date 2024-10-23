@@ -13,8 +13,8 @@ import {
 
 const Navbar = () => {
   return (
-    <nav className="flex items-center justify-around p-8">
-      <Link className="tracking-widest text-2xl font-extrabold" href="/">
+    <nav className="flex items-center justify-around p-8 ">
+      <Link className="tracking-widest text-2xl font-extrabold " href="/">
         CAMPUS
       </Link>
       <div>
@@ -22,7 +22,7 @@ const Navbar = () => {
           <NavigationMenuList>
             <NavigationMenuItem>
               <Link href="/about" legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink className={navigationMenuTriggerStyle() }>
                   Sobre
                 </NavigationMenuLink>
               </Link>
@@ -31,12 +31,12 @@ const Navbar = () => {
               <NavigationMenuTrigger>Ajuda</NavigationMenuTrigger>
               <NavigationMenuContent>
                 <Link href="/contact" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-40`}>
                     Contato
                   </NavigationMenuLink>
                 </Link>
                 <Link href="/howtouse" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-40`}>
                     Como usar
                   </NavigationMenuLink>
                 </Link>
