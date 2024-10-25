@@ -43,7 +43,7 @@ export const HomeProfileCard = ({
         </CardHeader>
         <CardContent className="">
           <div className="mt-4 text-center">
-            <p className="text-sm">RA: {ra}</p>
+            {ra && <p className="text-sm">RA: {ra}</p>}
             <p className="text-sm">{course}</p>
             <p className="text-sm">{university}</p>
           </div>
