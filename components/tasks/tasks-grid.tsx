@@ -11,7 +11,7 @@ export const TasksGrid = async () => {
 
   return (
     <div className="h-full">
-      <TasksCard name={profile.name} id={profile.id} />
+      <TasksCard name={profile.name} id={profile.id}/>
     </div>
   );
 };
