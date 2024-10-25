@@ -44,14 +44,12 @@ model Server {
   imageUrl   String
   inviteCode String @unique
 
-  course     String?
-  university String?
-
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   members  Member[]
   channels Channel[]
+  tasks    Task[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -178,10 +176,14 @@ model Task {
   description String?
   fileUrl     String?
   dueDate     DateTime
+  className   String
   status      TaskStatus @default(PENDING)
 
-  professorId String?
-  professor   User?   @relation("ProfessorTasks", fields: [professorId], references: [id], onDelete: Cascade)
+  professorId String
+  professor   User   @relation("ProfessorTasks", fields: [professorId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   submissions Submission[]
 
@@ -189,6 +191,7 @@ model Task {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@index([professorId])
+  @@index([serverId])
 }
 
 enum TaskStatus {
