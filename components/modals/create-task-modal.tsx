@@ -33,6 +33,7 @@ import { FileUpload } from "@/components/file-upload";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { Calendar } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const formSchema = z.object({
   title: z
@@ -45,10 +46,20 @@ const formSchema = z.object({
 });
 
 export const CreateTaskModal = () => {
-  const { isOpen, onClose, type } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
+  const { server } = data;
+  const [serverName, setServerName] = useState("");
+  const [serverId, setServerId] = useState("");
 
   const isModalOpen = isOpen && type === "createTask";
+
+  useEffect(() => {
+    if (server) {
+      setServerName(server.name);
+      setServerId(server.id);
+    }
+  }, [server]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -64,7 +75,13 @@ export const CreateTaskModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/academic/tasks", values);
+      const data = {
+        ...values,
+        className: serverName,
+        serverId: serverId,
+      };
+
+      await axios.post("/api/academic/tasks", data);
       router.refresh();
       onClose();
     } catch (error) {
@@ -85,7 +102,7 @@ export const CreateTaskModal = () => {
             Adicionar tarefa
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            A tarefa estará disponível a todos os membros dessa sala.
+            A tarefa estará disponível a todos os membros de {serverName}.
           </DialogDescription>
         </DialogHeader>
 

@@ -21,7 +21,7 @@ export default function Home() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await fetch("/api/academic/tasks");
+        const res = await fetch("/api/academic/calendar");
         const data = await res.json();
         setEvents(data);
       } catch (error) {
