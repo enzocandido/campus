@@ -1,9 +1,14 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 const About = () => {
   const sections = [
     {
       title: "Sobre nós",
       content:
-        "Campus é um recurso pedagógico desenvolvido para simplificar a interação e cooperação entre alunos e docentes, fomentando um ambiente de ensino mais interativo e acessível. Primeiramente disponibilizada como um site, ela será posteriormente ampliada para um aplicativo para dispositivos móveis, garantindo acesso fácil em qualquer lugar. Dentre suas funcionalidades primordiais estão um sistema de mensagens para comunicação ágil, um instrumento de administração de tarefas para estruturar as tarefas escolares e acompanhar prazos, áreas de colaboração para projetos coletivos e ferramentas de acessibilidade. Além disso, a plataforma prioriza a segurança dos dados dos usuários, adotando medidas rigorosas de proteção e oferecendo controle total sobre as informações pessoais."
+        "Campus é um recurso pedagógico desenvolvido para simplificar a interação e cooperação entre alunos e docentes, fomentando um ambiente de ensino mais interativo e acessível. Primeiramente disponibilizada como um site, ela será posteriormente ampliada para um aplicativo para dispositivos móveis, garantindo acesso fácil em qualquer lugar. Dentre suas funcionalidades primordiais estão um sistema de mensagens para comunicação ágil, um instrumento de administração de tarefas para estruturar as tarefas escolares e acompanhar prazos, áreas de colaboração para projetos coletivos e ferramentas de acessibilidade. Além disso, a plataforma prioriza a segurança dos dados dos usuários, adotando medidas rigorosas de proteção e oferecendo controle total sobre as informações pessoais.",
     },
     {
       title: "Nossa equipe",

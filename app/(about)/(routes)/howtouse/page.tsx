@@ -1,9 +1,14 @@
+"use client";
+
+import { motion } from "framer-motion";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Book, Users, Calendar, MessageSquare, HelpCircle } from "lucide-react";
 
 const HowToUse = () => {
   const faqs = [
@@ -30,8 +35,13 @@ const HowToUse = () => {
   ];
 
   return (
-    <div>
-      <h1 className="text-2xl mb-10 text-center">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-8"
+    >
+      <h1 className="text-3xl font-bold text-center mb-10">
         Como Usar a Plataforma - Perguntas Frequentes
       </h1>
       <Accordion type="single" collapsible className="w-full">
