@@ -59,7 +59,7 @@ export const CreateTaskModal = () => {
       setServerName(server.name);
       setServerId(server.id);
     }
-  }, [server]);
+  }, [server, form]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -203,7 +203,8 @@ export const CreateTaskModal = () => {
                 />
               </div>
               <span className="text-xs font-light text-zinc-500 mt-2">
-                Após selecionar o arquivo, clique em "Enviar arquivo" novamente
+                Após selecionar o arquivo, clique em &quot;Enviar arquivo&quot;
+                novamente
               </span>
             </div>
 
