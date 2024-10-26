@@ -115,7 +115,7 @@ export const CreateTaskModal = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs font-bold text-zinc-500">
-                      Título
+                      Título*
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -142,7 +142,7 @@ export const CreateTaskModal = () => {
                       <Input
                         disabled={isLoading}
                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
-                        placeholder="Descrição opcional"
+                        placeholder="Adicione uma descrição"
                         {...field}
                       />
                     </FormControl>
@@ -157,7 +157,7 @@ export const CreateTaskModal = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs font-bold text-zinc-500">
-                      Data de Vencimento
+                      Data de Vencimento*
                     </FormLabel>
                     <FormControl>
                       <Controller
@@ -170,7 +170,7 @@ export const CreateTaskModal = () => {
                               onChange={(date) =>
                                 onChange(moment(date).toDate())
                               }
-                              className="w-64 text-sm shadow rounded py-3 px-2 bg-primary text-zinc-500"
+                              className="w-64 text-sm shadow rounded py-3 px-2 text-zinc-500"
                               locale="pt-BR"
                             />
                             <Calendar className="absolute left-52 top-1/2 transform -translate-y-1/2 w-6 h-6 text-zinc-500" />
@@ -184,21 +184,28 @@ export const CreateTaskModal = () => {
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="fileUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <FileUpload
-                      endpoint="messageFile"
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className="space-y-8 px-6 text-center">
+              <div className="flex items-center justify-center">
+                <FormField
+                  control={form.control}
+                  name="fileUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="messageFile"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <span className="text-xs font-light text-zinc-500 mt-2">
+                Após selecionar o arquivo, clique em "Enviar arquivo" novamente
+              </span>
+            </div>
 
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button type="submit" variant="primary" disabled={isLoading}>

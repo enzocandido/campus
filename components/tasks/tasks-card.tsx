@@ -1,5 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { format } from "date-fns";
 import {
   Card,
   CardContent,
@@ -7,8 +11,29 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FileIcon } from "lucide-react";
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  FileIcon,
+  Calendar,
+  User,
+  Book,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
 interface TasksCardProps {
   title: string;
@@ -19,65 +44,121 @@ interface TasksCardProps {
   professor: string;
 }
 
-export const TasksCard = ({
+export function TasksCard({
   title,
   description,
   fileUrl,
   dueDate,
   className,
   professor,
-}: TasksCardProps) => {
+}: TasksCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const fileType = fileUrl?.split(".").pop();
-
   const isPDF = fileType === "pdf";
   const isImage = !isPDF && !!fileUrl;
 
-  return (
-    <div>
-      <Card className="text-center">
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
+  const formattedDueDate = format(new Date(dueDate), "dd/MM/yyyy");
+  const isOverdue = new Date(dueDate) < new Date();
 
-          {/* EM DESENVOLVIMENTO */}
-          <CardDescription>Data de Entrega: {dueDate}</CardDescription>
-          <CardDescription>Disciplina: {className}</CardDescription>
-          <CardDescription>Professor: {professor}</CardDescription>
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="overflow-hidden border-none">
+        <CardHeader className="pb-2">
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-xl mb-1">{title}</CardTitle>
+              <CardDescription className="text-sm">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge variant={isOverdue ? "destructive" : "secondary"}>
+                        <Calendar className="mr-1 h-3 w-3" />
+                        {formattedDueDate}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isOverdue ? "Atrasado" : "Data de entrega"}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </CardDescription>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="mt-4 space-y-2">
-            <p>{description || "Nenhuma descrição disponível."}</p>
-          </div>
-          {/* {isImage && (
-            <a
-              href={fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center justify-center bg-secondary h-48 w-48"
-            >
-              <Image
-                src={fileUrl}
-                alt={`Imagem sobre ${title}`}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-md"
-              />
-            </a>
-          )}
-          {isPDF && (
-            <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
-              <FileIcon className="h-10 w-10 fill-indigo-200 stroke-indigo-400" />
-              <a
-                href={fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline"
-              >
-                Baixar PDF
-              </a>
+          <motion.div
+            initial={false}
+            animate={{ height: isExpanded ? "auto" : 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="space-y-2 pt-2">
+              <p className="text-sm text-muted-foreground">
+                {description || "Nenhuma descrição disponível."}
+              </p>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <User className="h-4 w-4" />
+                <span>{professor}</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Book className="h-4 w-4" />
+                <span>{className}</span>
+              </div>
+              {isImage && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full">
+                      Ver imagem
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Imagem da tarefa</DialogTitle>
+                    </DialogHeader>
+                    <div className="relative aspect-video">
+                      <Image
+                        src={fileUrl}
+                        alt={`Imagem sobre ${title}`}
+                        layout="fill"
+                        objectFit="contain"
+                        className="rounded-md"
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+              {isPDF && (
+                <div className="flex items-center p-2 rounded-md bg-secondary">
+                  <FileIcon className="h-6 w-6 text-primary" />
+                  <a
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-sm text-primary hover:underline"
+                  >
+                    Baixar PDF
+                  </a>
+                </div>
+              )}
             </div>
-          )} */}
+          </motion.div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
-};
+}

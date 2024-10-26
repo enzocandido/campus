@@ -74,7 +74,7 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
           return "Escolha o arquivo ou arraste aqui";
         },
         button({ ready }) {
-          if (ready) return <div>Escolher arquivo</div>;
+          if (ready) return <div>Enviar arquivo</div>;
           return "Preparando...";
         },
         allowedContent({ ready, fileTypes, isUploading }) {

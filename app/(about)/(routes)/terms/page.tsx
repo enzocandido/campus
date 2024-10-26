@@ -1,55 +1,70 @@
+"use client";
+
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 const Terms = () => {
   const terms = [
     {
       title: "Objetivo da Plataforma",
       content:
-        "A plataforma é destinada a facilitar a comunicação entre alunos e docentes. Trata-se de um ambiente seguro para a partilha de informações educativas, administração de tarefas e trabalho em equipe.",
+        "O Campus é uma plataforma educacional projetada para facilitar a interação entre alunos e professores, fornecendo ferramentas para gerenciamento de tarefas, comunicação e colaboração em projetos acadêmicos.",
     },
     {
       title: "Uso Apropriado",
       content:
-        "Os usuários devem utilizar a plataforma de forma responsável e respeitosa, respeitando todas as leis e normas pertinentes. É vedado o uso de conteúdos ofensivos, discriminatórios ou que infrinjam direitos autorais.",
+        "Os usuários devem utilizar a plataforma de maneira ética e respeitosa, seguindo as diretrizes da instituição de ensino e as leis aplicáveis. É proibido o compartilhamento de conteúdo inadequado ou que viole direitos autorais.",
     },
     {
       title: "Cadastro e Segurança",
       content:
-        "Para acessar todas as funcionalidades, é necessário criar uma conta. Os usuários são encarregados de proteger a segurança de suas senhas e de todas as ações realizadas em suas contas.",
+        "Os usuários são responsáveis por manter a segurança de suas contas, utilizando senhas fortes e não compartilhando suas credenciais. A plataforma implementa medidas de segurança, mas os usuários devem estar atentos à proteção de seus dados.",
     },
     {
       title: "Privacidade",
       content:
-        "A plataforma coleta e guarda dados pessoais para garantir uma experiência individualizada e protegida. Todas as informações são processadas de acordo com nossa política de privacidade.",
+        "O Campus respeita a privacidade dos usuários e segue rigorosas políticas de proteção de dados. As informações pessoais são coletadas e utilizadas apenas para fins educacionais e de melhoria da plataforma, conforme descrito em nossa Política de Privacidade.",
     },
     {
       title: "Acessibilidade",
       content:
-        "Temos o compromisso de disponibilizar ferramentas de acessibilidade para garantir que indivíduos com deficiências, especialmente visuais, possam aproveitar ao máximo a plataforma.",
+        "Nos esforçamos para tornar o Campus acessível a todos os usuários, incluindo aqueles com necessidades especiais. Continuamente trabalhamos para melhorar os recursos de acessibilidade da plataforma.",
     },
     {
       title: "Modificações nos Termos",
       content:
-        "Temos a liberdade de alterar os termos de uso a qualquer momento. Todas as modificações serão informadas aos usuários, que precisarão concordar com as novas condições para continuar usando a plataforma.",
+        "O Campus reserva-se o direito de modificar estes termos de uso quando necessário. Os usuários serão notificados sobre alterações significativas e o uso contínuo da plataforma implica na aceitação dos novos termos.",
     },
   ];
 
   return (
-    <div className="justify-center">
-      <div>
-        <h1 className="text-2xl">Termos de uso do Campus</h1>
-        <div className="mt-2 font-light">
-          {terms.map((term, index) => (
-            <div key={index} className="m-4 text-justify">
-              <p>
-                <strong>
-                  {index + 1}. {term.title}:
-                </strong>
-              </p>
-              <p>{term.content}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-6"
+    >
+      <h1 className="text-3xl font-bold text-center mb-6">
+        Termos de Uso do Campus
+      </h1>
+      {terms.map((term, index) => (
+        <motion.div
+          key={index}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: index * 0.1 }}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle>{term.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{term.content}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      ))}
+    </motion.div>
   );
 };
 

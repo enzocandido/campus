@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { Calendar, HomeIcon, SquareMenu } from "lucide-react";
+import { Calendar, HomeIcon, Settings, SquareMenu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ActionTooltip } from "@/components/action-tooltip";
@@ -51,6 +51,12 @@ export const NavigationPage = ({ url, name }: NavigationPageProps) => {
           )}
           {url === "calendar" && (
             <Calendar
+              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
+              size={25}
+            />
+          )}
+          {url === "admin" && (
+            <Settings
               className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
               size={25}
             />

@@ -4,6 +4,8 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
+
 import { EventSourceInput } from "@fullcalendar/core";
 
 interface CalendarProps {
@@ -15,20 +17,20 @@ interface CalendarProps {
 export function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
   return (
     <FullCalendar
-      locale={"pt-BR"}
-      timeZone="local"
-      plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+      plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, listPlugin]}
       headerToolbar={{
         left: "prev,next today",
         center: "title",
-        right: "dayGridMonth,timeGridWeek",
+        right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
       }}
-      events={events}
-      nowIndicator={true}
+      initialView="dayGridMonth"
       editable={true}
       selectable={true}
-      dateClick={onDateClick}
-      eventClick={onEventClick}
+      selectMirror={true}
+      dayMaxEvents={true}
+      weekends={true}
+      events={events}
+      locale="pt-BR"
       buttonText={{
         today: "Hoje",
         month: "Mês",
@@ -36,6 +38,9 @@ export function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
         day: "Dia",
         list: "Lista",
       }}
+      allDayText="Dia todo"
+      moreLinkText="mais"
+      noEventsText="Nenhum evento"
       contentHeight={750}
       slotLabelFormat={{
         hour: "numeric",
