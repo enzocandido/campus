@@ -54,13 +54,7 @@ export const CreateTaskModal = () => {
 
   const isModalOpen = isOpen && type === "createTask";
 
-  useEffect(() => {
-    if (server) {
-      setServerName(server.name);
-      setServerId(server.id);
-    }
-  }, [server, form]);
-
+  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,7 +64,14 @@ export const CreateTaskModal = () => {
       dueDate: new Date(),
     },
   });
-
+  
+  useEffect(() => {
+    if (server) {
+      setServerName(server.name);
+      setServerId(server.id);
+    }
+  }, [server, form]);
+  
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
