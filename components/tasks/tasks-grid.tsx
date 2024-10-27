@@ -42,7 +42,11 @@ interface Task {
   status: "pending" | "completed";
 }
 
-export function TasksGrid() {
+interface TasksGridProps {
+  userRole: string;
+}
+
+export function TasksGrid({ userRole }: TasksGridProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -201,6 +205,7 @@ export function TasksGrid() {
                 transition={{ duration: 0.2 }}
               >
                 <TasksCard
+                  userRole={userRole}
                   title={task.title}
                   description={task.description}
                   fileUrl={task.fileUrl}
