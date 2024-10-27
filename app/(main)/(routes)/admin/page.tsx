@@ -3,7 +3,7 @@ import { AdminGrid } from "@/components/admin/admin-grid";
 
 const Admin = () => {
   return (
-    <div>
+    <div className="space-y-6 ">
       <AdminHeader />
       <AdminGrid />
     </div>
