@@ -14,7 +14,9 @@ export type ModalType =
   | "messageFile"
   | "deleteMessage"
   | "enterServer"
-  | "createTask";
+  | "createTask"
+  | "sendTask"
+  | "deleteTask";
 
 interface ModalData {
   server?: Server;

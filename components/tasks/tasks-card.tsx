@@ -1,9 +1,7 @@
-"use client";
-
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { format } from "date-fns";
+import Image from "next/image";
 import {
   Card,
   CardContent,
@@ -14,12 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -27,13 +19,22 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  FileIcon,
-  Calendar,
-  User,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Book,
+  Calendar,
   ChevronDown,
   ChevronUp,
+  FileIcon,
+  Send,
+  Trash,
+  User,
 } from "lucide-react";
+import { useModal } from "@/hooks/use-modal-store";
 
 interface TasksCardProps {
   title: string;
@@ -42,6 +43,7 @@ interface TasksCardProps {
   dueDate: string;
   className: string;
   professor: string;
+  userRole: string;
 }
 
 export function TasksCard({
@@ -51,7 +53,10 @@ export function TasksCard({
   dueDate,
   className,
   professor,
+  userRole,
 }: TasksCardProps) {
+  const { onOpen } = useModal();
+
   const [isExpanded, setIsExpanded] = useState(false);
   const fileType = fileUrl?.split(".").pop();
   const isPDF = fileType === "pdf";
@@ -59,6 +64,12 @@ export function TasksCard({
 
   const formattedDueDate = format(new Date(dueDate), "dd/MM/yyyy");
   const isOverdue = new Date(dueDate) < new Date();
+
+  const handleEditTask = () => {
+  };
+
+  const handleSubmitTask = () => {
+  };
 
   return (
     <motion.div
@@ -87,17 +98,39 @@ export function TasksCard({
                 </TooltipProvider>
               </CardDescription>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? (
-                <ChevronUp className="h-4 w-4" />
+            <div className="flex items-center space-x-2">
+              {userRole === "PROFESSOR" ? (
+                // implementar logicas de editar e deletar
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => onOpen("deleteTask")}
+                >
+                  <Trash className="h-4 w-4 mr-2" />
+                  Excluir
+                </Button>
               ) : (
-                <ChevronDown className="h-4 w-4" />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onOpen("sendTask")}
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Enviar
+                </Button>
               )}
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                {isExpanded ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
