@@ -31,6 +31,9 @@ const formSchema = z.object({
   fileUrl: z.string().min(1, {
     message: "Anexe um arquivo.",
   }),
+  message: z.string().min(1, {
+    message: "Escreva uma mensagem.",
+  }),
 });
 
 export const SendTaskModal = () => {
@@ -39,19 +42,20 @@ export const SendTaskModal = () => {
 
   const isModalOpen = isOpen && type === "sendTask";
 
-  const { apiUrl, query} = data;
+  const { apiUrl, query } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fileUrl: "",
+      message: "",
     },
   });
 
   const handleClose = () => {
     form.reset();
-    onClose()
-  }
+    onClose();
+  };
 
   const isLoading = form.formState.isSubmitting;
 
@@ -83,13 +87,29 @@ export const SendTaskModal = () => {
             Enviar tarefa
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Envie um arquivo como mensagem
+            Envie uma mensagem e um arquivo para a tarefa
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-8 px-6">
-              <div className="flex items-center justify-center text-center">
+            <div className="space-y-8 px-6 max-w-md mx-auto w-full">
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <textarea
+                        {...field}
+                        className="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-gray-800 resize-none focus:outline-none focus:border-gray-300"
+                        placeholder="Escreva uma mensagem..."
+                        rows={2}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="w-full">
                 <FormField
                   control={form.control}
                   name="fileUrl"
