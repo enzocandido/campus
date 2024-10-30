@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/dialog";
 import { Event } from "@/types";
 import { Button } from "../ui/button";
+import { currentProfile } from "@/lib/current-profile";
 
 interface CalendarEventModalProps {
   isOpen: boolean;
@@ -25,6 +26,10 @@ export function CalendarEventModal({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewEvent({ ...newEvent, title: e.target.value });
   };
+  const handleChangeContent = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNewEvent({ ...newEvent, content: e.target.value });
+  };
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +50,12 @@ export function CalendarEventModal({
             value={newEvent.title}
             onChange={handleChange}
             className="w-full rounded-md border px-3 py-2 mt-4"
+          />
+          <textarea
+            placeholder="Conteúdo"
+            value={newEvent.content}
+            onChange={handleChangeContent}
+            className="w-full rounded-md border px-3 py-2 mt-4 h-24"
           />
           <Button
             type="submit"

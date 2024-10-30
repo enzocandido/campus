@@ -19,6 +19,7 @@ export type NextApiResponseServerIo = NextApiResponse & {
 export interface Event {
   id: string;
   title: string;
+  content: string;
   start: string | Date;
   allDay: boolean;
 }

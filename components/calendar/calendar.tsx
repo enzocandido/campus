@@ -5,6 +5,9 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
+import { useModal } from "@/hooks/use-modal-store";
+import { ActionTooltip } from "@/components/action-tooltip";
+import { Button } from "@/components/ui/button";
 
 import { EventSourceInput } from "@fullcalendar/core";
 
@@ -47,6 +50,9 @@ export function Calendar({ events, onDateClick, onEventClick }: CalendarProps) {
         minute: "2-digit",
         hour12: false,
       }}
+      dateClick={onDateClick}
+      eventClick={onEventClick}
     />
+    
   );
 }

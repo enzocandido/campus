@@ -39,7 +39,10 @@ export const NavigationSidebar = async () => {
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#0a0a0a] bg-[#E3E5E8] py-3">
       {profile.academicRole === "ADMIN" && (
-        <NavigationPage url="admin" name="Painel de administrador" />
+         <>
+         <NavigationPage url="admin" name="Painel de administrador" />
+         <NavigationPage url="calendar" name="Calendário" />
+       </>
       )}
       {profile.academicRole !== "ADMIN" && (
         <>

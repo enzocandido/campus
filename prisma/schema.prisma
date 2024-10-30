@@ -194,6 +194,19 @@ model Task {
   @@index([serverId])
 }
 
+model Event {
+  id      String   @id @map("_id") 
+  title   String
+  content String
+  start   DateTime
+  end     DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 enum TaskStatus {
   PENDING
   COMPLETED
