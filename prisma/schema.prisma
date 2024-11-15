@@ -23,6 +23,7 @@ model User {
   servers  Server[]
   members  Member[]
   channels Channel[]
+  events Event[]
 
   tasksCreated Task[]       @relation("ProfessorTasks")
   submissions  Submission[] @relation("StudentSubmissions")

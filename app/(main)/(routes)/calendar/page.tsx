@@ -1,83 +1,58 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { Calendar } from "@/components/calendar/calendar";
-import { CalendarEventModal } from "@/components/calendar/calendar-event-modal";
-import { CalendarDeleteModal } from "@/components/calendar/calendar-delete-modal";
-import { Event } from "@/types";
+import {
+  viewDay,
+  viewMonthAgenda,
+  viewMonthGrid,
+  viewWeek,
+} from "@schedule-x/calendar";
+import "@schedule-x/theme-default/dist/index.css";
+import { createDragAndDropPlugin } from "@schedule-x/drag-and-drop";
+import { createEventModalPlugin } from "@schedule-x/event-modal";
+import { ScheduleXCalendar, useCalendarApp } from "@schedule-x/react";
+import { createEventsServicePlugin } from "@schedule-x/events-service";
+import { useState } from "react";
+import { useTheme } from "next-themes";
 
 export default function Home() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [newEvent, setNewEvent] = useState<Event>({
-    id: "",
-    title: "",
-    start: "",
-    allDay: false,
-  });
-  const [showEventModal, setShowEventModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [eventToDelete, setEventToDelete] = useState<string | null>(null);
+  const eventsServicePlugin = useState(() => createEventsServicePlugin())[0];
+  
+    const { theme } = useTheme();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch("/api/academic/calendar");
-        const data = await res.json();
-        setEvents(data);
-      } catch (error) {
-        console.error("Failed to fetch tasks:", error);
-      }
-    };
-
-    fetchEvents();
-  }, []);
-
-  const handleDateClick = (arg: { date: Date; allDay: boolean }) => {
-    setNewEvent({
-      ...newEvent,
-      start: arg.date.toISOString(),
-      allDay: arg.allDay,
-      id: Date.now().toString(),
-    });
-    setShowEventModal(true);
-  };
-
-  const handleAddEvent = (event: Event) => {
-    setEvents((prev) => [...prev, event]);
-    setShowEventModal(false);
-  };
-
-  const handleEventClick = (info: any) => {
-    setEventToDelete(info.event.id);
-    setShowDeleteModal(true);
-  };
-
-  const handleDeleteEvent = () => {
-    setEvents(events.filter((event) => event.id !== eventToDelete));
-    setShowDeleteModal(false);
-  };
+  const calendarApp = useCalendarApp(
+    {
+      views: [viewWeek, viewMonthGrid, viewDay, viewMonthAgenda],
+      defaultView: viewMonthGrid.name,
+      firstDayOfWeek: 0,
+      callbacks: {
+        onRangeUpdate: (range) => {
+          calendarApp.eventsService.set([
+            {
+              id: "12",
+              title: "Event 1",
+              start: range.start,
+              end: range.end,
+            },
+          ]);
+        },
+      },
+      events: [
+        {
+          id: "12",
+          title: "Event 1",
+          start: "2024-11-15 06:00",
+          end: "2024-11-15 08:00",
+        },
+      ],
+      isDark: theme == "dark",
+      locale: "pt-BR",
+      
+    },
+    [createDragAndDropPlugin(), createEventModalPlugin(), eventsServicePlugin],
+  );
 
   return (
-    <main className="p-8">
-      <Calendar
-        events={events}
-        onDateClick={handleDateClick}
-        onEventClick={handleEventClick}
-      />
-
-      <CalendarEventModal
-        isOpen={showEventModal}
-        onClose={() => setShowEventModal(false)}
-        onSubmit={handleAddEvent}
-        newEvent={newEvent}
-        setNewEvent={setNewEvent}
-      />
-
-      <CalendarDeleteModal
-        isOpen={showDeleteModal}
-        onClose={() => setShowDeleteModal(false)}
-        onDelete={handleDeleteEvent}
-      />
-    </main>
+    <div>
+      <ScheduleXCalendar calendarApp={calendarApp} />
+    </div>
   );
 }

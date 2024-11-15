@@ -7,58 +7,9 @@ body,
 :root {
   height: 100%;
 }
-
-.dark .rdt input {
-  @apply bg-primary;
+.sx-react-calendar-wrapper {
+  @apply w-full h-screen p-8 max-h-screen;
 }
-
-.fc .fc-toolbar-title {
-  @apply font-semibold;
-}
-
-.fc * {
-  @apply dark:border-neutral-800 !important;
-}
-
-.fc .fc-button {
-  @apply bg-primary border-zinc-700 dark:text-zinc-950 outline-none !important;
-}
-
-.fc .fc-button:active {
-  @apply ring-offset-2 ring-ring ring-2 outline-none border-none transition-colors !important;
-}
-
-.fc .fc-button:hover {
-  @apply bg-primary/90 !important;
-}
-
-.fc .fc-button:disabled {
-  @apply opacity-50 pointer-events-none !important;
-}
-
-.fc-day-today {
-  @apply bg-emerald-200 border-none text-gray-900 !important;
-}
-
-.fc-theme-standard td {
-  @apply border-zinc-200 dark:border-zinc-800;
-}
-
-.fc-day-other {
-  @apply bg-neutral-300 dark:bg-neutral-800 text-black dark:text-white;
-}
-
-.fc .fc-button .fc-icon {
-  @apply font-medium !important;
-}
-
-a.fc-col-header-cell-cushion {
-  @apply font-light p-2 !important;
-}
-
-.fc .fc-daygrid-day-top {
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
