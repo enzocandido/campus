@@ -37,6 +37,7 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 
 interface TasksCardProps {
+  id: string;
   title: string;
   description?: string;
   fileUrl?: string;
@@ -44,9 +45,11 @@ interface TasksCardProps {
   className: string;
   professor: string;
   userRole: string;
+  status: string;
 }
 
 export function TasksCard({
+  id,
   title,
   description,
   fileUrl,
@@ -56,7 +59,7 @@ export function TasksCard({
   userRole,
 }: TasksCardProps) {
   const { onOpen } = useModal();
-
+  const taskId = id;
   const [isExpanded, setIsExpanded] = useState(false);
   const fileType = fileUrl?.split(".").pop();
   const isPDF = fileType === "pdf";
@@ -65,10 +68,10 @@ export function TasksCard({
   const formattedDueDate = format(new Date(dueDate), "dd/MM/yyyy");
   const isOverdue = new Date(dueDate) < new Date();
 
-  const handleEditTask = () => {
-  };
+  const handleSubmitTask = () => {};
 
-  const handleSubmitTask = () => {
+  const handleDeleteTask = () => {
+    onOpen("deleteTask", { taskId });
   };
 
   return (
@@ -100,11 +103,10 @@ export function TasksCard({
             </div>
             <div className="flex items-center space-x-2">
               {userRole === "PROFESSOR" ? (
-                // implementar logicas de editar e deletar
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => onOpen("deleteTask")}
+                  onClick={handleDeleteTask}
                 >
                   <Trash className="h-4 w-4 mr-2" />
                   Excluir

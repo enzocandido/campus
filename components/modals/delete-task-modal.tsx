@@ -14,22 +14,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export const DeleteTaskModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const isModalOpen = isOpen && type === "deleteTask";
-
+  const { taskId } = data;
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const onClick = async () => {
-
     try {
       setIsLoading(true);
       setErrorMessage("");
 
-      //implementar api
-
+      await axios.delete(`/api/academic/tasks/${taskId}`);
+      router.refresh();
+      window.location.reload();
       onClose();
     } catch (error) {
       console.error("Erro ao deletar a tarefa:", error);

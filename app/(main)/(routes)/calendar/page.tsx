@@ -15,8 +15,8 @@ import { useTheme } from "next-themes";
 
 export default function Home() {
   const eventsServicePlugin = useState(() => createEventsServicePlugin())[0];
-  
-    const { theme } = useTheme();
+
+  const { theme } = useTheme();
 
   const calendarApp = useCalendarApp(
     {
@@ -35,17 +35,8 @@ export default function Home() {
           ]);
         },
       },
-      events: [
-        {
-          id: "12",
-          title: "Event 1",
-          start: "2024-11-15 06:00",
-          end: "2024-11-15 08:00",
-        },
-      ],
       isDark: theme == "dark",
       locale: "pt-BR",
-      
     },
     [createDragAndDropPlugin(), createEventModalPlugin(), eventsServicePlugin],
   );

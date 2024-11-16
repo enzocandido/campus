@@ -16,6 +16,7 @@ export const HomeGrid = async () => {
         ra={profile.ra || ""}
         email={profile.email}
         imageUrl={profile.imageUrl}
+        academicRole={profile.academicRole}
         university={profile.university || "Não informado."}
         course={profile.course || "Não informado."}
       />

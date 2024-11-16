@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { TasksCard } from "@/components/tasks/tasks-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -27,7 +28,16 @@ import {
   SortAsc,
   SortDesc,
   Filter,
+  X,
+  Calendar,
 } from "lucide-react";
+import { format, isPast } from "date-fns";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface Task {
   id: string;
@@ -39,7 +49,6 @@ interface Task {
   professor?: {
     name: string;
   };
-  status: "pending" | "completed";
 }
 
 interface TasksGridProps {
@@ -54,9 +63,10 @@ export function TasksGrid({ userRole }: TasksGridProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "pending" | "completed"
+    "all" | "pending" | "expired"
   >("all");
   const [classFilter, setClassFilter] = useState<string>("all");
+  const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -79,27 +89,38 @@ export function TasksGrid({ userRole }: TasksGridProps) {
   }, []);
 
   useEffect(() => {
-    const filtered = tasks.filter(
-      (task) =>
+    const now = new Date();
+    const filtered = tasks.filter((task) => {
+      const taskStatus = isPast(new Date(task.dueDate)) ? "expired" : "pending";
+      return (
         (task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           task.className.toLowerCase().includes(searchTerm.toLowerCase()) ||
           task.professor?.name
             .toLowerCase()
             .includes(searchTerm.toLowerCase())) &&
-        (statusFilter === "all" || task.status === statusFilter) &&
-        (classFilter === "all" || task.className === classFilter),
-    );
+        (statusFilter === "all" || taskStatus === statusFilter) &&
+        (classFilter === "all" || task.className === classFilter) &&
+        (!dateFilter ||
+          new Date(task.dueDate).toDateString() === dateFilter.toDateString())
+      );
+    });
     const sorted = [...filtered].sort((a, b) => {
       const dateA = new Date(a.dueDate).getTime();
       const dateB = new Date(b.dueDate).getTime();
       return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
     });
     setFilteredTasks(sorted);
-  }, [tasks, searchTerm, sortOrder, statusFilter, classFilter]);
+  }, [tasks, searchTerm, sortOrder, statusFilter, classFilter, dateFilter]);
 
   const uniqueClasses = Array.from(
     new Set(tasks.map((task) => task.className)),
   );
+
+  const clearFilters = () => {
+    setStatusFilter("all");
+    setClassFilter("all");
+    setDateFilter(undefined);
+  };
 
   if (isLoading) {
     return (
@@ -119,7 +140,7 @@ export function TasksGrid({ userRole }: TasksGridProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-8">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -130,7 +151,7 @@ export function TasksGrid({ userRole }: TasksGridProps) {
             className="pl-8"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Select
             value={sortOrder}
             onValueChange={(value: "asc" | "desc") => setSortOrder(value)}
@@ -168,8 +189,8 @@ export function TasksGrid({ userRole }: TasksGridProps) {
               <DropdownMenuItem onClick={() => setStatusFilter("pending")}>
                 Pendentes
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("completed")}>
-                Concluídas
+              <DropdownMenuItem onClick={() => setStatusFilter("expired")}>
+                Expiradas
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Disciplinas</DropdownMenuLabel>
@@ -186,12 +207,74 @@ export function TasksGrid({ userRole }: TasksGridProps) {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline">
+                <Calendar className="mr-2 h-4 w-4" />
+                {dateFilter ? format(dateFilter, "PPP") : "Filtrar por data"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <CalendarComponent
+                mode="single"
+                selected={dateFilter}
+                onSelect={setDateFilter}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {statusFilter !== "all" && (
+          <Badge variant="secondary" className="text-xs">
+            Status: {statusFilter === "pending" ? "Pendentes" : "Expiradas"}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4 ml-1"
+              onClick={() => setStatusFilter("all")}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </Badge>
+        )}
+        {classFilter !== "all" && (
+          <Badge variant="secondary" className="text-xs">
+            Disciplina: {classFilter}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4 ml-1"
+              onClick={() => setClassFilter("all")}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </Badge>
+        )}
+        {dateFilter && (
+          <Badge variant="secondary" className="text-xs">
+            Data: {format(dateFilter, "dd/MM/yyyy")}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-4 w-4 ml-1"
+              onClick={() => setDateFilter(undefined)}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </Badge>
+        )}
+        {(statusFilter !== "all" || classFilter !== "all" || dateFilter) && (
+          <Button variant="ghost" size="sm" onClick={clearFilters}>
+            Limpar filtros
+          </Button>
+        )}
       </div>
       <AnimatePresence>
         {filteredTasks.length > 0 ? (
           <motion.div
-            className="px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -207,24 +290,36 @@ export function TasksGrid({ userRole }: TasksGridProps) {
                 <TasksCard
                   userRole={userRole}
                   title={task.title}
+                  id={task.id}
                   description={task.description}
                   fileUrl={task.fileUrl}
                   dueDate={task.dueDate}
                   className={task.className}
                   professor={task.professor?.name || ""}
+                  status={
+                    isPast(new Date(task.dueDate)) ? "expired" : "pending"
+                  }
                 />
               </motion.div>
             ))}
           </motion.div>
         ) : (
-          <motion.p
-            className="text-center text-muted-foreground"
+          <motion.div
+            className="flex flex-col items-center justify-center h-64 text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            Nenhuma tarefa encontrada.
-          </motion.p>
+            <AlertCircle className="h-8 w-8 mb-2" />
+            <p>Nenhuma tarefa encontrada.</p>
+            {(statusFilter !== "all" ||
+              classFilter !== "all" ||
+              dateFilter) && (
+              <Button variant="link" onClick={clearFilters} className="mt-2">
+                Limpar filtros
+              </Button>
+            )}
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

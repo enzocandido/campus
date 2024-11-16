@@ -2,24 +2,26 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { currentProfile } from "@/lib/current-profile";
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { taskId: string } },
+) {
   try {
     const profile = await currentProfile();
 
     if (!profile) {
       return NextResponse.json(
         { error: "Usuário não autenticado" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const { searchParams } = new URL(request.url);
-    const taskId = searchParams.get("taskId");
+    const { taskId } = params;
 
     if (!taskId) {
       return NextResponse.json(
         { error: "ID da tarefa não fornecido" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -30,7 +32,7 @@ export async function DELETE(request: Request) {
     if (!task) {
       return NextResponse.json(
         { error: "Tarefa não encontrada" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -46,22 +48,22 @@ export async function DELETE(request: Request) {
     });
 
     if (!server || server.members.length === 0) {
-      return NextResponse.json(
-        { error: "Permissão negada" },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Permissão negada" }, { status: 403 });
     }
 
     await prisma.task.delete({
       where: { id: taskId },
     });
 
-    return NextResponse.json({ message: "Tarefa deletada com sucesso" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Tarefa deletada com sucesso" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Erro ao deletar a tarefa:", error);
     return NextResponse.json(
       { error: "Erro ao deletar a tarefa" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

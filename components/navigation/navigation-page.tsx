@@ -1,10 +1,10 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import { Calendar, HomeIcon, Settings, SquareMenu } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { ActionTooltip } from "@/components/action-tooltip";
+import { usePathname } from "next/navigation";
 
 interface NavigationPageProps {
   url: string;
@@ -12,57 +12,54 @@ interface NavigationPageProps {
 }
 
 export const NavigationPage = ({ url, name }: NavigationPageProps) => {
-  const router = useRouter();
   const pathname = usePathname();
-
-  const onClick = () => {
-    router.push(`/${url}`);
-  };
 
   return (
     <ActionTooltip side="right" align="center" label={name}>
-      <button onClick={onClick} className="group relative flex items-center">
-        <div
-          className={cn(
-            "absolute left-0 bg-primary rounded-r-full transition-all opacity-0 w-[4px]",
-            pathname !== `/${url}` &&
-              "group-hover:h-[20px] group-hover:opacity-100",
-            pathname === `/${url}` ? "h-[36px] opacity-100" : "h-[8px]",
-          )}
-        />
-        <div
-          className={cn(
-            "flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] dark:group-hover:bg-white group-hover:bg-black",
-            pathname === `/${url}` &&
-              "bg-primary/10 text-primary rounded-[16px]",
-          )}
-        >
-          {url === "home" && (
-            <HomeIcon
-              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
-              size={25}
-            />
-          )}
-          {url === "tasks" && (
-            <SquareMenu
-              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
-              size={25}
-            />
-          )}
-          {url === "calendar" && (
-            <Calendar
-              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
-              size={25}
-            />
-          )}
-          {url === "admin" && (
-            <Settings
-              className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
-              size={25}
-            />
-          )}
-        </div>
-      </button>
+      <Link href={`/${url}`} passHref>
+        <button className="group relative flex items-center">
+          <div
+            className={cn(
+              "absolute left-0 bg-primary rounded-r-full transition-all opacity-0 w-[4px]",
+              pathname !== `/${url}` &&
+                "group-hover:h-[20px] group-hover:opacity-100",
+              pathname === `/${url}` ? "h-[36px] opacity-100" : "h-[8px]",
+            )}
+          />
+          <div
+            className={cn(
+              "flex mx-3 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-[#1f1f1f] dark:group-hover:bg-white group-hover:bg-black",
+              pathname === `/${url}` &&
+                "bg-primary/10 text-primary rounded-[16px]",
+            )}
+          >
+            {url === "home" && (
+              <HomeIcon
+                className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
+                size={25}
+              />
+            )}
+            {url === "tasks" && (
+              <SquareMenu
+                className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
+                size={25}
+              />
+            )}
+            {url === "calendar" && (
+              <Calendar
+                className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
+                size={25}
+              />
+            )}
+            {url === "admin" && (
+              <Settings
+                className="group-hover:text-white dark:group-hover:text-black transition dark:text-white"
+                size={25}
+              />
+            )}
+          </div>
+        </button>
+      </Link>
     </ActionTooltip>
   );
 };
