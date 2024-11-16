@@ -59,15 +59,24 @@ export async function GET() {
       select: {
         id: true,
         title: true,
-        content: true,
-        start: true,
-        end: true,
+        description: true,
+        startDate: true,
+        endDate: true,
       },
     });
 
-    const events = [...taskEvents, ...userEvents];
-    console.log(events);
-    return NextResponse.json(events);
+    const events = userEvents.map((event) => ({
+      id: event.id,
+      title: event.title,
+      description: event.description,
+      start: event.startDate.toISOString(),
+      end: event.endDate.toISOString(),
+    }));
+
+    const allEvents = [...taskEvents, ...events];
+
+    console.log(allEvents);
+    return NextResponse.json(allEvents);
   } catch (error) {
     console.error("Error fetching events:", error);
     return NextResponse.json(

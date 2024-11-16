@@ -20,8 +20,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+interface CalendarProps {
+  role?: string;
+}
 
-export const Calendar = () => {
+export const Calendar = ({ role }: CalendarProps) => {
   const eventsServicePlugin = useState(() => createEventsServicePlugin())[0];
   const { theme } = useTheme();
 
@@ -110,13 +113,15 @@ export const Calendar = () => {
       locale: "pt-BR",
       callbacks: {
         onDoubleClickEvent(calendarEvent) {
-          if (calendarEvent.isEvent) {
-            setEventToDelete(calendarEvent);
-          } else {
-            toast({
-              title: "Aviso",
-              description: "Apenas eventos podem ser deletados.",
-            });
+          if (role === "ADMIN") {
+            if (calendarEvent.isEvent) {
+              setEventToDelete(calendarEvent);
+            } else {
+              toast({
+                title: "Aviso",
+                description: "Apenas eventos podem ser deletados.",
+              });
+            }
           }
         },
       },
@@ -126,7 +131,7 @@ export const Calendar = () => {
 
   useEffect(() => {
     fetchTasksAndEvents();
-  }, []);
+  }, [fetchTasksAndEvents]);
 
   return (
     <div>
