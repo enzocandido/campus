@@ -16,6 +16,7 @@ import { EnterServerModal } from "../modals/enter-server-modal";
 import { CreateTaskModal } from "../modals/create-task-modal";
 import { SendTaskModal } from "../modals/send-task-modal";
 import { DeleteTaskModal } from "../modals/delete-task-modal";
+import { CreateEventModal } from "../modals/create-event-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -45,6 +46,7 @@ export const ModalProvider = () => {
       <CreateTaskModal />
       <SendTaskModal />
       <DeleteTaskModal />
+      <CreateEventModal />
     </>
   );
 };

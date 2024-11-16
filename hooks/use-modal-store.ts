@@ -16,7 +16,8 @@ export type ModalType =
   | "enterServer"
   | "createTask"
   | "sendTask"
-  | "deleteTask";
+  | "deleteTask"
+  | "createEvent";
 
 interface ModalData {
   server?: Server;

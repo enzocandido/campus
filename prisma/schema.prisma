@@ -23,7 +23,7 @@ model User {
   servers  Server[]
   members  Member[]
   channels Channel[]
-  events Event[]
+  events   Event[]
 
   tasksCreated Task[]       @relation("ProfessorTasks")
   submissions  Submission[] @relation("StudentSubmissions")
@@ -196,11 +196,12 @@ model Task {
 }
 
 model Event {
-  id      String   @id @map("_id") 
-  title   String
-  content String
-  start   DateTime
-  end     DateTime
+  id          String   @id @map("_id")
+  title       String
+  description String?
+  location    String?
+  startDate   DateTime
+  endDate     DateTime
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

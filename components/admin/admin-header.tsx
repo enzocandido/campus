@@ -1,8 +1,9 @@
 import { Menu } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { NavigationSidebar } from "../navigation/navigation-sidebar";
 import { AdminSidebar } from "./admin-sidebar";
+import { AdminEvent } from "./admin-event";
 
 export const AdminHeader = () => {
   return (
@@ -22,9 +23,10 @@ export const AdminHeader = () => {
               <AdminSidebar />
             </SheetContent>
           </Sheet>
-          <span className="text-lg font-semibold md:ml-0">
+          <span className="font-sm md:text-lg font-semibold md:ml-0">
             Admin Dashboard
           </span>
+          <AdminEvent />
         </div>
       </div>
     </header>

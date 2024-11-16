@@ -47,7 +47,7 @@ export async function DELETE(
       },
     });
 
-    if (!server || server.members.length === 0) {
+    if (!server) {
       return NextResponse.json({ error: "Permissão negada" }, { status: 403 });
     }
 

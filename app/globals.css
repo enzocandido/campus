@@ -8,8 +8,13 @@ body,
   height: 100%;
 }
 .sx-react-calendar-wrapper {
-  @apply w-full h-screen p-8 max-h-screen;
+  @apply h-[90vh] w-full md:h-screen p-2 md:p-8 max-h-screen text-xs;
 }
+
+.dark .rdt input {
+  @apply bg-primary;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

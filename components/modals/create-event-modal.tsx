@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FileUpload } from "@/components/file-upload";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import { Calendar } from "lucide-react";
@@ -39,53 +38,52 @@ const formSchema = z.object({
   title: z
     .string()
     .min(1, "O título é obrigatório.")
-    .max(30, "O tamanho máximo para o título da tarefa é de 30 caracteres."),
+    .max(30, "O tamanho máximo para o título do evento é de 30 caracteres."),
   description: z.string().optional(),
-  fileUrl: z.string().optional(),
-  dueDate: z.date(),
+  location: z.string().optional(),
+  startDate: z.date(),
+  endDate: z.date(),
 });
 
-export const CreateTaskModal = () => {
+export const CreateEventModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  const { server } = data;
   const [serverName, setServerName] = useState("");
   const [serverId, setServerId] = useState("");
 
-  const isModalOpen = isOpen && type === "createTask";
+  const isModalOpen = isOpen && type === "createEvent";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       description: "",
-      fileUrl: "",
-      dueDate: new Date(),
+      location: "",
+      startDate: new Date(),
+      endDate: new Date(),
     },
   });
 
   useEffect(() => {
-    if (server) {
-      setServerName(server.name);
-      setServerId(server.id);
+    if (data?.server) {
+      setServerName(data.server.name);
+      setServerId(data.server.id);
     }
-  }, [server, form]);
+  }, [data, form]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const data = {
+      const payload = {
         ...values,
-        className: serverName,
-        serverId: serverId,
       };
 
-      await axios.post("/api/academic/tasks", data);
+      await axios.post("/api/academic/events", payload);
       router.refresh();
       onClose();
     } catch (error) {
-      console.error("Erro ao criar a tarefa:", error);
+      console.error("Erro ao criar o evento:", error);
     }
   };
 
@@ -99,29 +97,29 @@ export const CreateTaskModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Adicionar tarefa
+            Adicionar evento
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-500 hidden md:inline-block">
-            A tarefa estará disponível a todos os membros de {serverName}.
+          <DialogDescription className="text-center text-zinc-500">
+            O evento estará disponível a todos os membros da universidade.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-4 md:space-y-8 px-6">
+            <div className="space-y-8 px-6">
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="hidden md:inline-block uppercase text-xs font-bold text-zinc-500">
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
                       Título*
                     </FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
-                        placeholder="Insira o título da tarefa"
+                        placeholder="Insira o nome do evento"
                         {...field}
                       />
                     </FormControl>
@@ -135,7 +133,7 @@ export const CreateTaskModal = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 hidden md:inline-block">
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
                       Descrição
                     </FormLabel>
                     <FormControl>
@@ -153,16 +151,69 @@ export const CreateTaskModal = () => {
 
               <FormField
                 control={form.control}
-                name="dueDate"
+                name="location"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="uppercase text-xs font-bold text-zinc-500">
-                      Data de Vencimento*
+                      Local
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
+                        placeholder="Local do evento"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="startDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
+                      Data de Início*
                     </FormLabel>
                     <FormControl>
                       <Controller
                         control={form.control}
-                        name="dueDate"
+                        name="startDate"
+                        render={({ field: { onChange, value } }) => (
+                          <div className="relative">
+                            <Datetime
+                              value={moment(value)}
+                              onChange={(date) =>
+                                onChange(moment(date).toDate())
+                              }
+                              className="w-64 text-sm shadow rounded py-3 px-2 text-zinc-500"
+                              locale="pt-BR"
+                            />
+                            <Calendar className="absolute left-52 top-1/2 transform -translate-y-1/2 w-6 h-6 text-zinc-500" />
+                          </div>
+                        )}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="endDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
+                      Data de Término*
+                    </FormLabel>
+                    <FormControl>
+                      <Controller
+                        control={form.control}
+                        name="endDate"
                         render={({ field: { onChange, value } }) => (
                           <div className="relative">
                             <Datetime
@@ -184,33 +235,9 @@ export const CreateTaskModal = () => {
               />
             </div>
 
-            <div className="space-y-8 px-6 text-center">
-              <div className="flex items-center justify-center">
-                <FormField
-                  control={form.control}
-                  name="fileUrl"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <FileUpload
-                          endpoint="messageFile"
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <span className="text-xs font-light text-zinc-500 mt-2 hidden md:inline-block">
-                Após selecionar o arquivo, clique em &quot;Enviar arquivo&quot;
-                novamente
-              </span>
-            </div>
-
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button type="submit" variant="primary" disabled={isLoading}>
-                {isLoading ? "Enviando..." : "Criar Tarefa"}
+                {isLoading ? "Enviando..." : "Criar Evento"}
               </Button>
             </DialogFooter>
           </form>

@@ -156,7 +156,7 @@ export const AdminUsers = () => {
                         <UserAvatar src={user.imageUrl} className="h-10 w-10" />
                         <div>
                           <p className="font-semibold">{user.name}</p>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground max-w-32">
                             {user.email}
                           </p>
                           <p className="text-sm text-muted-foreground">
