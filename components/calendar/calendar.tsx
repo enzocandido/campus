@@ -141,7 +141,7 @@ export const Calendar = () => {
             <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente o
-              evento "{eventToDelete?.title}".
+              evento {eventToDelete?.title}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex space-y-2">
