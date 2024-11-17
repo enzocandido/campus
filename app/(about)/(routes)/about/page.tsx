@@ -6,31 +6,45 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const About = () => {
   const sections = [
     {
-      title: "Sobre nós",
+      title: "O projeto",
       content:
         "Campus é um recurso pedagógico desenvolvido para simplificar a interação e cooperação entre alunos e docentes, fomentando um ambiente de ensino mais interativo e acessível. Primeiramente disponibilizada como um site, ela será posteriormente ampliada para um aplicativo para dispositivos móveis, garantindo acesso fácil em qualquer lugar. Dentre suas funcionalidades primordiais estão um sistema de mensagens para comunicação ágil, um instrumento de administração de tarefas para estruturar as tarefas escolares e acompanhar prazos, áreas de colaboração para projetos coletivos e ferramentas de acessibilidade. Além disso, a plataforma prioriza a segurança dos dados dos usuários, adotando medidas rigorosas de proteção e oferecendo controle total sobre as informações pessoais.",
     },
     {
       title: "Nossa equipe",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam maximus nec tellus eu tempor. Curabitur id leo ut mauris tincidunt euismod. Sed id leo ut libero egestas pulvinar nec sed urna. Quisque nec sem ac lorem pellentesque dignissim a ut neque. Morbi ullamcorper mi quis efficitur ultricies. Curabitur lobortis fringilla orci, sit amet vulputate turpis venenatis vel. Maecenas ut lorem ac eros consectetur laoreet sed et velit. Quisque venenatis, turpis tempor dapibus luctus, risus diam commodo nisl, non malesuada neque lorem ac velit. Integer vulputate risus hendrerit justo efficitur vehicula. Cras vel ligula sed nulla aliquet tincidunt non at lorem. Duis sit amet libero venenatis ipsum dictum accumsan a dignissim ante. Phasellus commodo, orci vel feugiat aliquet, eros neque tempor mi, eget tristique ante ligula vel eros. Cras eu congue nisi."
+        "Somos uma equipe de estudantes da Fatec São Caetano do Sul, unida pelo propósito de desenvolver o Campus, um projeto voltado para a melhoria da comunicação e gestão de atividades acadêmicas. Este trabalho faz parte da conclusão do curso de Análise e Desenvolvimento de Sistemas, sob a orientação do professor Dr. Adilson. Rafhael Rômulo Trevas, Gabriel Sales Nascimento e Bryan Wagner Consoli foram responsáveis pela documentação e pesquisas essenciais para a  base do projeto. Enzo Candido da Silva, Guilherme da Silva Almeida e Gabriel Ricardo de Morais Pelossi se concentraram no desenvolvimento técnico, cuidando do frontend, backend, segurança e banco de dados.",
     },
-    {
-      title: "O projeto",
-      content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam maximus nec tellus eu tempor. Curabitur id leo ut mauris tincidunt euismod. Sed id leo ut libero egestas pulvinar nec sed urna. Quisque nec sem ac lorem pellentesque dignissim a ut neque. Morbi ullamcorper mi quis efficitur ultricies. Curabitur lobortis fringilla orci, sit amet vulputate turpis venenatis vel. Maecenas ut lorem ac eros consectetur laoreet sed et velit. Quisque venenatis, turpis tempor dapibus luctus, risus diam commodo nisl, non malesuada neque lorem ac velit. Integer vulputate risus hendrerit justo efficitur vehicula. Cras vel ligula sed nulla aliquet tincidunt non at lorem. Duis sit amet libero venenatis ipsum dictum accumsan a dignissim ante. Phasellus commodo, orci vel feugiat aliquet, eros neque tempor mi, eget tristique ante ligula vel eros. Cras eu congue nisi."
-    }
   ];
 
   return (
-    <div className="md:flex justify-evenly">
-      {sections.map((section, index) => (
-        <div key={index} className="m-4">
-          <h1 className="text-2xl">{section.title}</h1>
-          <p className="mt-2 font-light">{section.content}</p>
-        </div>
-      ))}
-    </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="space-y-8"
+    >
+      <h1 className="text-3xl font-bold text-center mb-10">Sobre o Campus</h1>
+      <div className="grid md:grid-cols-2 gap-8">
+        {sections.map((section, index) => (
+          <motion.div
+            key={index}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: index * 0.2 }}
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>{section.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{section.content}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
   );
 };
 
