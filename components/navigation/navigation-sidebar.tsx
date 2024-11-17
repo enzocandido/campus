@@ -1,0 +1,81 @@
+import { redirect } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
+
+import { db } from "@/lib/db";
+import { NavigationAction } from "./navigation-action";
+import { currentProfile } from "@/lib/current-profile";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ModeToggle } from "@/components/mode-toggle";
+import { NavigationItem } from "./navigation-item";
+import { NavigationPage } from "./navigation-page";
+
+export const NavigationSidebar = async () => {
+  const profile = await currentProfile();
+
+  if (!profile) {
+    return redirect("/");
+  }
+
+  const servers = await db.server.findMany({
+    where: {
+      members: {
+        some: {
+          userId: profile.id,
+        },
+      },
+    },
+  });
+
+  const { academicRole } = (await db.user.findFirst({
+    where: {
+      id: profile.id,
+    },
+    select: {
+      academicRole: true,
+    },
+  })) || { academicRole: "" };
+
+  return (
+    <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#0a0a0a] bg-[#E3E5E8] py-3">
+      {profile.academicRole === "ADMIN" && (
+         <>
+         <NavigationPage url="admin" name="Painel de administrador" />
+         <NavigationPage url="calendar" name="Calendário" />
+       </>
+      )}
+      {profile.academicRole !== "ADMIN" && (
+        <>
+          <NavigationPage url="home" name="Início" />
+          <NavigationPage url="tasks" name="Tarefas" />
+          <NavigationPage url="calendar" name="Calendário" />
+        </>
+      )}
+      <NavigationAction academicRole={academicRole} />
+      <Separator className="h-[2px] bg-zinc-300 dark:bg-[#1f1f1f] rounded-md w-10 mx-auto" />
+      <ScrollArea className="flex-1 w-full">
+        {servers.map((server) => (
+          <div key={server.id} className="mb-4">
+            <NavigationItem
+              id={server.id}
+              name={server.name}
+              imageUrl={server.imageUrl}
+            />
+          </div>
+        ))}
+      </ScrollArea>
+      <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
+        <ModeToggle />
+
+        <UserButton
+          appearance={{
+            elements: {
+              avatarBox: "h-[48px] w-[48px]",
+              userButtonPopoverCard: { pointerEvents: "initial" },
+            },
+          }}
+        />
+      </div>
+    </div>
+  );
+};

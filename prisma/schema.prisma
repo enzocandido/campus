@@ -1,0 +1,238 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String       @id @map("_id")
+  name         String
+  email        String       @unique
+  imageUrl     String
+  role         String       @default("user")
+  academicRole AcademicRole @default(STUDENT)
+
+  ra         String?
+  course     String?
+  university String?
+  department String?
+
+  servers  Server[]
+  members  Member[]
+  channels Channel[]
+  events   Event[]
+
+  tasksCreated Task[]       @relation("ProfessorTasks")
+  submissions  Submission[] @relation("StudentSubmissions")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum AcademicRole {
+  STUDENT
+  PROFESSOR
+  ADMIN
+}
+
+model Server {
+  id String @id @map("_id")
+
+  name       String
+  imageUrl   String
+  inviteCode String @unique
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  members  Member[]
+  channels Channel[]
+  tasks    Task[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([userId])
+}
+
+enum MemberRole {
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
+model Member {
+  id String @id @map("_id")
+
+  role MemberRole @default(GUEST)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  messages      Message[]
+  directMessage DirectMessage[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  conversationsInitiated Conversation[] @relation("MemberOne")
+  conversationsReceived  Conversation[] @relation("MemberTwo")
+
+  @@index([userId])
+  @@index([serverId])
+}
+
+enum ChannelType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Channel {
+  id String @id @map("_id")
+
+  name String
+  type ChannelType @default(TEXT)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([serverId])
+}
+
+model Message {
+  id      String @id @map("_id")
+  content String
+
+  fileUrl String?
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  deleted Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([channelId])
+  @@index([memberId])
+}
+
+model Conversation {
+  id String @id @map("_id")
+
+  memberOneId String
+  memberOne   Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+
+  memberTwoId String
+  memberTwo   Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+
+  directMessages DirectMessage[]
+
+  @@unique([memberOneId, memberTwoId])
+  @@index([memberTwoId])
+}
+
+model DirectMessage {
+  id      String  @id @map("_id")
+  content String
+  fileUrl String?
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  deleted Boolean @default(false)
+
+  @@index([memberId])
+  @@index([conversationId])
+}
+
+model Task {
+  id          String     @id @map("_id")
+  title       String
+  description String?
+  fileUrl     String?
+  dueDate     DateTime
+  className   String
+  status      TaskStatus @default(PENDING)
+
+  professorId String
+  professor   User   @relation("ProfessorTasks", fields: [professorId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server   Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  submissions Submission[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([professorId])
+  @@index([serverId])
+}
+
+model Event {
+  id          String   @id @map("_id")
+  title       String
+  description String?
+  location    String?
+  startDate   DateTime
+  endDate     DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+  EXPIRED
+}
+
+model Submission {
+  id          String   @id @map("_id")
+  content     String
+  fileUrl     String?
+  submittedAt DateTime @default(now())
+
+  studentId String
+  student   User   @relation("StudentSubmissions", fields: [studentId], references: [id], onDelete: Cascade)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  graded   Boolean @default(false)
+  feedback String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  @@index([studentId])
+  @@index([taskId])
+}
