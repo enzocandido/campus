@@ -217,7 +217,7 @@ enum TaskStatus {
 
 model Submission {
   id          String   @id @map("_id")
-  content     String?
+  content     String
   fileUrl     String?
   submittedAt DateTime @default(now())
 

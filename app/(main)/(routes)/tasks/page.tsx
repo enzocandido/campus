@@ -12,7 +12,7 @@ const Tasks = async () => {
   return (
     <div>
       <TasksHeader />
-      <TasksGrid userRole={profile.academicRole} />
+      <TasksGrid userRole={profile.academicRole} userId={profile.id} />
     </div>
   );
 };

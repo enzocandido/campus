@@ -6,6 +6,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import {
   Dialog,
@@ -16,21 +17,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
 import { useModal } from "@/hooks/use-modal-store";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
-  fileUrl: z.string().min(1, {
-    message: "Anexe um arquivo.",
-  }),
+  fileUrl: z.string().optional(),
+  content: z.string().min(1, { message: "Detalhe o envio" }),
 });
 
 export const SendTaskModal = () => {
@@ -38,41 +34,44 @@ export const SendTaskModal = () => {
   const router = useRouter();
 
   const isModalOpen = isOpen && type === "sendTask";
-
-  const { apiUrl, query} = data;
+  const { taskId } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fileUrl: "",
+      content: "",
     },
   });
-
-  const handleClose = () => {
-    form.reset();
-    onClose()
-  }
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: apiUrl || "",
-        query,
+        url: "/api/academic/submissions",
+        query: {
+          taskId: taskId,
+        },
       });
 
       await axios.post(url, {
-        ...values,
-        content: values.fileUrl,
+        taskId: taskId,
+        fileUrl: values.fileUrl,
+        content: values.content,
       });
 
       form.reset();
       router.refresh();
-      handleClose();
+      onClose();
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleClose = () => {
+    form.reset();
+    onClose();
   };
 
   return (
@@ -106,6 +105,23 @@ export const SendTaskModal = () => {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Detalhe seu envio"
+                        {...field}
+                        rows={4}
+                        className="bg-white"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant="primary" disabled={isLoading}>

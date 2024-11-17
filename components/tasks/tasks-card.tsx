@@ -27,6 +27,7 @@ import {
 import {
   Book,
   Calendar,
+  Check,
   ChevronDown,
   ChevronUp,
   FileIcon,
@@ -44,8 +45,9 @@ interface TasksCardProps {
   dueDate: string;
   className: string;
   professor: string;
+  status: "pending" | "expired";
   userRole: string;
-  status: string;
+  isSubmitted: boolean;
 }
 
 export function TasksCard({
@@ -56,7 +58,9 @@ export function TasksCard({
   dueDate,
   className,
   professor,
+  status,
   userRole,
+  isSubmitted,
 }: TasksCardProps) {
   const { onOpen } = useModal();
   const taskId = id;
@@ -68,7 +72,9 @@ export function TasksCard({
   const formattedDueDate = format(new Date(dueDate), "dd/MM/yyyy");
   const isOverdue = new Date(dueDate) < new Date();
 
-  const handleSubmitTask = () => {};
+  const handleSubmitTask = () => {
+    onOpen("sendTask", { taskId });
+  };
 
   const handleDeleteTask = () => {
     onOpen("deleteTask", { taskId });
@@ -112,14 +118,32 @@ export function TasksCard({
                   Excluir
                 </Button>
               ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onOpen("sendTask")}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Enviar
-                </Button>
+                <>
+                  {isSubmitted ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSubmitTask}
+                      disabled
+                    >
+                      <Check className="h-4 w-4 mr-2" />
+                      Tarefa já enviada
+                    </Button>
+                  ) : isOverdue ? (
+                    <Button variant="outline" size="sm" disabled>
+                      Prazo encerrado
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSubmitTask}
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Enviar
+                    </Button>
+                  )}
+                </>
               )}
               <Button
                 variant="ghost"

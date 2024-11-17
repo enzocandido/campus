@@ -49,13 +49,18 @@ interface Task {
   professor?: {
     name: string;
   };
+  submissions: {
+    id: string;
+    studentId: string;
+  }[];
 }
 
 interface TasksGridProps {
   userRole: string;
+  userId: string;
 }
 
-export function TasksGrid({ userRole }: TasksGridProps) {
+export function TasksGrid({ userRole, userId }: TasksGridProps) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,21 +68,25 @@ export function TasksGrid({ userRole }: TasksGridProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [statusFilter, setStatusFilter] = useState<
-    "all" | "pending" | "expired"
+    "all" | "pending" | "expired" | "submitted"
   >("all");
   const [classFilter, setClassFilter] = useState<string>("all");
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+
+  const handleEvaluateSubmission = (submissionId: string) => {
+    console.log("Avaliando submissão:", submissionId);
+  };
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/academic/tasks");
-        if (!response.ok) {
-          throw new Error("Erro ao carregar as tarefas");
-        }
-        const data: Task[] = await response.json();
-        setTasks(data);
-        setFilteredTasks(data);
+        const tasksResponse = await fetch("/api/academic/tasks");
+        const tasksData: Task[] = await tasksResponse.json();
+
+        setTasks(tasksData);
+        setFilteredTasks(tasksData);
+        setCurrentUserId(userId);
       } catch (error: any) {
         setError(error.message || "Erro desconhecido");
       } finally {
@@ -85,20 +94,25 @@ export function TasksGrid({ userRole }: TasksGridProps) {
       }
     };
 
-    fetchTasks();
-  }, []);
+    fetchData();
+  }, [userId]);
 
   useEffect(() => {
     const now = new Date();
     const filtered = tasks.filter((task) => {
       const taskStatus = isPast(new Date(task.dueDate)) ? "expired" : "pending";
+      const isSubmitted = task.submissions.some(
+        (sub) => sub.studentId === currentUserId,
+      );
       return (
         (task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
           task.className.toLowerCase().includes(searchTerm.toLowerCase()) ||
           task.professor?.name
             .toLowerCase()
             .includes(searchTerm.toLowerCase())) &&
-        (statusFilter === "all" || taskStatus === statusFilter) &&
+        (statusFilter === "all" ||
+          (statusFilter === "submitted" && isSubmitted) ||
+          (statusFilter !== "submitted" && taskStatus === statusFilter)) &&
         (classFilter === "all" || task.className === classFilter) &&
         (!dateFilter ||
           new Date(task.dueDate).toDateString() === dateFilter.toDateString())
@@ -110,7 +124,15 @@ export function TasksGrid({ userRole }: TasksGridProps) {
       return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
     });
     setFilteredTasks(sorted);
-  }, [tasks, searchTerm, sortOrder, statusFilter, classFilter, dateFilter]);
+  }, [
+    tasks,
+    searchTerm,
+    sortOrder,
+    statusFilter,
+    classFilter,
+    dateFilter,
+    currentUserId,
+  ]);
 
   const uniqueClasses = Array.from(
     new Set(tasks.map((task) => task.className)),
@@ -192,6 +214,9 @@ export function TasksGrid({ userRole }: TasksGridProps) {
               <DropdownMenuItem onClick={() => setStatusFilter("expired")}>
                 Expiradas
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setStatusFilter("submitted")}>
+                Enviadas
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuLabel>Disciplinas</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => setClassFilter("all")}>
@@ -228,7 +253,12 @@ export function TasksGrid({ userRole }: TasksGridProps) {
       <div className="flex flex-wrap gap-2">
         {statusFilter !== "all" && (
           <Badge variant="secondary" className="text-xs">
-            Status: {statusFilter === "pending" ? "Pendentes" : "Expiradas"}
+            Status:{" "}
+            {statusFilter === "pending"
+              ? "Pendentes"
+              : statusFilter === "expired"
+              ? "Expiradas"
+              : "Enviadas"}
             <Button
               variant="ghost"
               size="icon"
@@ -299,7 +329,31 @@ export function TasksGrid({ userRole }: TasksGridProps) {
                   status={
                     isPast(new Date(task.dueDate)) ? "expired" : "pending"
                   }
+                  isSubmitted={task.submissions.some(
+                    (sub) => sub.studentId === currentUserId,
+                  )}
                 />
+                <div className="mt-4 space-y-2">
+                  <h4 className="font-medium">Submissões:</h4>
+                  {task.submissions.map((submission) => (
+                    <div
+                      key={submission.id}
+                      className="p-4 border rounded-md bg-muted"
+                    >
+                      <p className="text-sm">
+                        ID do Aluno: {submission.studentId}
+                      </p>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleEvaluateSubmission(submission.id)}
+                        className="mt-2"
+                      >
+                        Avaliar
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </motion.div>
             ))}
           </motion.div>

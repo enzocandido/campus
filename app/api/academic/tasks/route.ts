@@ -45,6 +45,12 @@ export async function GET() {
         professor: {
           select: { name: true },
         },
+        submissions: {
+          select: {
+            id: true,
+            studentId: true,
+          },
+        },
       },
     });
 
