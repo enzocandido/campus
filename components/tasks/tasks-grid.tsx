@@ -30,6 +30,11 @@ import {
   Filter,
   X,
   Calendar,
+  FileText,
+  CheckCircle,
+  XCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -38,6 +43,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface Task {
   id: string;
@@ -73,9 +92,29 @@ export function TasksGrid({ userRole, userId }: TasksGridProps) {
   const [classFilter, setClassFilter] = useState<string>("all");
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [openSubmissions, setOpenSubmissions] = useState<string[]>([]);
 
-  const handleEvaluateSubmission = (submissionId: string) => {
-    console.log("Avaliando submissão:", submissionId);
+  const handleEvaluateSubmission = (
+    submissionId: string,
+    taskId: string,
+    evaluation: string,
+  ) => {
+    console.log(
+      "Avaliando envio:",
+      submissionId,
+      "da tarefa:",
+      taskId,
+      "com avaliação:",
+      evaluation,
+    );
+  };
+
+  const toggleSubmissions = (taskId: string) => {
+    setOpenSubmissions((prev) =>
+      prev.includes(taskId)
+        ? prev.filter((id) => id !== taskId)
+        : [...prev, taskId],
+    );
   };
 
   useEffect(() => {
@@ -333,27 +372,98 @@ export function TasksGrid({ userRole, userId }: TasksGridProps) {
                     (sub) => sub.studentId === currentUserId,
                   )}
                 />
-                <div className="mt-4 space-y-2">
-                  <h4 className="font-medium">Submissões:</h4>
-                  {task.submissions.map((submission) => (
-                    <div
-                      key={submission.id}
-                      className="p-4 border rounded-md bg-muted"
-                    >
-                      <p className="text-sm">
-                        ID do Aluno: {submission.studentId}
-                      </p>
+                {userRole === "PROFESSOR" && task.submissions.length > 0 && (
+                  <Collapsible className="mt-4">
+                    <CollapsibleTrigger asChild>
                       <Button
-                        variant="primary"
+                        variant="outline"
                         size="sm"
-                        onClick={() => handleEvaluateSubmission(submission.id)}
-                        className="mt-2"
+                        className="flex items-center justify-between w-full border-0"
+                        onClick={() => toggleSubmissions(task.id)}
                       >
-                        Avaliar
+                        Envios ({task.submissions.length})
+                        {openSubmissions.includes(task.id) ? (
+                          <ChevronUp className="h-4 w-4 ml-2" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4 ml-2" />
+                        )}
                       </Button>
-                    </div>
-                  ))}
-                </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="mt-2 space-y-2">
+                        {task.submissions.map((submission) => (
+                          <div
+                            key={submission.id}
+                            className="p-4 border rounded-md bg-muted"
+                          >
+                            <div className="flex justify-between items-center">
+                              <p className="text-sm font-medium">
+                                Aluno: {submission.studentId}
+                              </p>
+                            </div>
+                            <div className="mt-2 flex items-center space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center"
+                              >
+                                <FileText className="mr-2 h-4 w-4" />
+                                Ver envio
+                              </Button>
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    Avaliar
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>Avaliar Envio</DialogTitle>
+                                    <DialogDescription>
+                                      Avalie o envio do aluno{" "}
+                                      {submission.studentId}
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="grid gap-4 py-4">
+                                    <Textarea placeholder="Comentários sobre o envio..." />
+                                    <div className="flex justify-end space-x-2">
+                                      <Button
+                                        variant="outline"
+                                        onClick={() =>
+                                          handleEvaluateSubmission(
+                                            submission.id,
+                                            task.id,
+                                            "rejected",
+                                          )
+                                        }
+                                      >
+                                        <XCircle className="mr-2 h-4 w-4" />
+                                        Reprovar
+                                      </Button>
+                                      <Button
+                                        variant="default"
+                                        onClick={() =>
+                                          handleEvaluateSubmission(
+                                            submission.id,
+                                            task.id,
+                                            "approved",
+                                          )
+                                        }
+                                      >
+                                        <CheckCircle className="mr-2 h-4 w-4" />
+                                        Aprovar
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
               </motion.div>
             ))}
           </motion.div>
