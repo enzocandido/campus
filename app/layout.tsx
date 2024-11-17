@@ -5,7 +5,6 @@ import "./globals.css";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { ptBR } from "@clerk/localizations";
-import { dark } from "@clerk/themes";
 
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ModalProvider } from "@/components/providers/modal-provider";
@@ -32,9 +31,8 @@ export default function RootLayout({
       localization={ptBR}
       appearance={{
         layout: {
-          termsPageUrl: '/terms',
+          termsPageUrl: "/terms",
         },
-        baseTheme: dark,
       }}
     >
       <html lang="pt-BR" suppressHydrationWarning>

@@ -23,7 +23,7 @@ const Navbar = () => {
         whileHover={{ scale: 1.1 }}
       >
         <Link
-          className="tracking-widest text-2xl font-extrabold text-white"
+          className="tracking-widest text-2xl font-extrabold dark:text-white"
           href="/"
         >
           CAMPUS
@@ -35,7 +35,7 @@ const Navbar = () => {
           <NavigationMenuItem>
             <Link href="/about" legacyBehavior passHref>
               <NavigationMenuLink
-                className={`${navigationMenuTriggerStyle()} text-white`}
+                className={`${navigationMenuTriggerStyle()} text-white  bg-black hover:bg-opacity-30 hover:opacity-70 transition-all duration-200`}
               >
                 Sobre
               </NavigationMenuLink>
@@ -43,7 +43,7 @@ const Navbar = () => {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-white">
+            <NavigationMenuTrigger className="text-white  bg-black hover:bg-opacity-30 hover:opacity-70 transition-all duration-200">
               Ajuda
             </NavigationMenuTrigger>
             <NavigationMenuContent>
