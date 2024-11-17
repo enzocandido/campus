@@ -127,11 +127,11 @@ export function TasksCard({
                       disabled
                     >
                       <Check className="h-4 w-4 mr-2" />
-                      Tarefa já enviada
+                      Enviada
                     </Button>
                   ) : isOverdue ? (
                     <Button variant="outline" size="sm" disabled>
-                      Prazo encerrado
+                      Expirada
                     </Button>
                   ) : (
                     <Button
