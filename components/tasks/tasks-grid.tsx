@@ -35,6 +35,7 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
+  FileIcon,
 } from "lucide-react";
 import { format, isPast } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -57,6 +58,20 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import Image from "next/image";
+
+interface Submission {
+  id: string;
+  studentId: string;
+  student: {
+    name: string;
+  };
+  fileUrl?: string;
+  content: string;
+  graded: boolean;
+  status?: string;
+  feedback?: string;
+}
 
 interface Task {
   id: string;
@@ -68,10 +83,7 @@ interface Task {
   professor?: {
     name: string;
   };
-  submissions: {
-    id: string;
-    studentId: string;
-  }[];
+  submissions: Submission[];
 }
 
 interface TasksGridProps {
@@ -93,20 +105,70 @@ export function TasksGrid({ userRole, userId }: TasksGridProps) {
   const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [currentUserId, setCurrentUserId] = useState<string>("");
   const [openSubmissions, setOpenSubmissions] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [evaluationError, setEvaluationError] = useState<string | null>(null);
 
-  const handleEvaluateSubmission = (
+  const handleEvaluateSubmission = async (
     submissionId: string,
     taskId: string,
-    evaluation: string,
+    status: string,
   ) => {
-    console.log(
-      "Avaliando envio:",
-      submissionId,
-      "da tarefa:",
-      taskId,
-      "com avaliação:",
-      evaluation,
-    );
+    try {
+      setIsSubmitting(true);
+      setEvaluationError(null);
+
+      const response = await fetch(
+        `/api/academic/submissions/${submissionId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            submissionId,
+            feedback: feedbackText,
+            status: status,
+            graded: true,
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erro ao avaliar o envio");
+      }
+
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => {
+          if (task.id === taskId) {
+            return {
+              ...task,
+              submissions: task.submissions.map((sub) => {
+                if (sub.id === submissionId) {
+                  return {
+                    ...sub,
+                    graded: true,
+                    status: status,
+                    feedback: feedbackText,
+                  };
+                }
+                return sub;
+              }),
+            };
+          }
+          return task;
+        }),
+      );
+
+      setFeedbackText("");
+    } catch (error) {
+      setEvaluationError(
+        error instanceof Error ? error.message : "Erro ao avaliar o envio",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleSubmissions = (taskId: string) => {
@@ -115,6 +177,16 @@ export function TasksGrid({ userRole, userId }: TasksGridProps) {
         ? prev.filter((id) => id !== taskId)
         : [...prev, taskId],
     );
+  };
+
+  const isImage = (url?: string) => {
+    if (!url) return false;
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+  };
+
+  const isPDF = (url?: string) => {
+    if (!url) return false;
+    return /\.pdf$/i.test(url);
   };
 
   useEffect(() => {
@@ -371,6 +443,27 @@ export function TasksGrid({ userRole, userId }: TasksGridProps) {
                   isSubmitted={task.submissions.some(
                     (sub) => sub.studentId === currentUserId,
                   )}
+                  feedback={
+                    task.submissions.find(
+                      (sub) => sub.studentId === currentUserId,
+                    )?.feedback || ""
+                  }
+                  grade={
+                    task.submissions.find(
+                      (sub) => sub.studentId === currentUserId,
+                    )?.status === "approved"
+                      ? "approved"
+                      : task.submissions.find(
+                          (sub) => sub.studentId === currentUserId,
+                        )?.status === "rejected"
+                      ? "rejected"
+                      : undefined
+                  }
+                  isGraded={
+                    task.submissions.find(
+                      (sub) => sub.studentId === currentUserId,
+                    )?.graded || false
+                  }
                 />
                 {userRole === "PROFESSOR" && task.submissions.length > 0 && (
                   <Collapsible className="mt-4">
@@ -398,65 +491,168 @@ export function TasksGrid({ userRole, userId }: TasksGridProps) {
                           >
                             <div className="flex justify-between items-center">
                               <p className="text-sm font-medium">
-                                Aluno: {submission.studentId}
+                                Aluno: {submission.student.name}
                               </p>
+                              {submission.graded && (
+                                <Badge
+                                  variant={
+                                    submission.status === "approved"
+                                      ? "default"
+                                      : "destructive"
+                                  }
+                                >
+                                  {submission.status === "approved"
+                                    ? "Aprovado"
+                                    : "Reprovado"}
+                                </Badge>
+                              )}
                             </div>
-                            <div className="mt-2 flex items-center space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex items-center"
-                              >
-                                <FileText className="mr-2 h-4 w-4" />
-                                Ver envio
-                              </Button>
-                              <Dialog>
-                                <DialogTrigger asChild>
-                                  <Button variant="outline" size="sm">
-                                    Avaliar
-                                  </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                  <DialogHeader>
-                                    <DialogTitle>Avaliar Envio</DialogTitle>
-                                    <DialogDescription>
-                                      Avalie o envio do aluno{" "}
-                                      {submission.studentId}
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <div className="grid gap-4 py-4">
-                                    <Textarea placeholder="Comentários sobre o envio..." />
-                                    <div className="flex justify-end space-x-2">
-                                      <Button
-                                        variant="outline"
-                                        onClick={() =>
-                                          handleEvaluateSubmission(
-                                            submission.id,
-                                            task.id,
-                                            "rejected",
-                                          )
-                                        }
-                                      >
-                                        <XCircle className="mr-2 h-4 w-4" />
-                                        Reprovar
-                                      </Button>
-                                      <Button
-                                        variant="default"
-                                        onClick={() =>
-                                          handleEvaluateSubmission(
-                                            submission.id,
-                                            task.id,
-                                            "approved",
-                                          )
-                                        }
-                                      >
-                                        <CheckCircle className="mr-2 h-4 w-4" />
-                                        Aprovar
-                                      </Button>
+                            <div className="mt-2">
+                              <p className="text-sm text-muted-foreground">
+                                {submission.content}
+                              </p>
+                              {submission.fileUrl && (
+                                <div className="mt-2">
+                                  {isImage(submission.fileUrl) ? (
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                        <Button
+                                          variant="outline"
+                                          className="w-full"
+                                        >
+                                          Ver imagem
+                                        </Button>
+                                      </DialogTrigger>
+                                      <DialogContent className="max-w-2xl">
+                                        <DialogHeader>
+                                          <DialogTitle>
+                                            Imagem do envio
+                                          </DialogTitle>
+                                        </DialogHeader>
+                                        <div className="relative aspect-video">
+                                          <Image
+                                            src={submission.fileUrl}
+                                            alt={`Envio de ${submission.student.name}`}
+                                            layout="fill"
+                                            objectFit="contain"
+                                            className="rounded-md"
+                                          />
+                                        </div>
+                                      </DialogContent>
+                                    </Dialog>
+                                  ) : (
+                                    isPDF(submission.fileUrl) && (
+                                      <div className="flex items-center p-2 rounded-md bg-secondary">
+                                        <FileIcon className="h-6 w-6 text-primary" />
+                                        <a
+                                          href={submission.fileUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="ml-2 text-sm text-primary hover:underline"
+                                        >
+                                          Baixar PDF
+                                        </a>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              )}
+                              {submission.graded && submission.feedback && (
+                                <div className="mt-2 p-3 bg-secondary rounded-md">
+                                  <p className="text-sm font-medium">
+                                    Feedback do professor:
+                                  </p>
+                                  <p className="text-sm mt-1">
+                                    {submission.feedback}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                            <div className="mt-4 flex items-center space-x-2">
+                              {!submission.graded && (
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button variant="outline" size="sm">
+                                      Avaliar
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>Avaliar Envio</DialogTitle>
+                                      <DialogDescription>
+                                        Avalie o envio do aluno{" "}
+                                        {submission.student.name}
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <div className="space-y-2">
+                                        <label
+                                          htmlFor="feedback"
+                                          className="text-sm font-medium"
+                                        >
+                                          Feedback
+                                        </label>
+                                        <Textarea
+                                          id="feedback"
+                                          placeholder="Comentários sobre o envio..."
+                                          value={feedbackText}
+                                          onChange={(e) =>
+                                            setFeedbackText(e.target.value)
+                                          }
+                                          className="min-h-[100px]"
+                                        />
+                                      </div>
+                                      {evaluationError && (
+                                        <p className="text-sm text-destructive">
+                                          {evaluationError}
+                                        </p>
+                                      )}
+                                      <div className="flex justify-end space-x-2">
+                                        <Button
+                                          variant="outline"
+                                          onClick={() =>
+                                            handleEvaluateSubmission(
+                                              submission.id,
+                                              task.id,
+                                              "rejected",
+                                            )
+                                          }
+                                          disabled={
+                                            isSubmitting || !feedbackText.trim()
+                                          }
+                                        >
+                                          {isSubmitting ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                          ) : (
+                                            <XCircle className="mr-2 h-4 w-4" />
+                                          )}
+                                          Reprovar
+                                        </Button>
+                                        <Button
+                                          variant="default"
+                                          onClick={() =>
+                                            handleEvaluateSubmission(
+                                              submission.id,
+                                              task.id,
+                                              "approved",
+                                            )
+                                          }
+                                          disabled={
+                                            isSubmitting || !feedbackText.trim()
+                                          }
+                                        >
+                                          {isSubmitting ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                          ) : (
+                                            <CheckCircle className="mr-2 h-4 w-4" />
+                                          )}
+                                          Aprovar
+                                        </Button>
+                                      </div>
                                     </div>
-                                  </div>
-                                </DialogContent>
-                              </Dialog>
+                                  </DialogContent>
+                                </Dialog>
+                              )}
                             </div>
                           </div>
                         ))}

@@ -49,6 +49,16 @@ export async function GET() {
           select: {
             id: true,
             studentId: true,
+            content: true,
+            fileUrl: true,
+            feedback: true,
+            graded: true,
+            status: true,
+            student: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },

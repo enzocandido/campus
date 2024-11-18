@@ -20,6 +20,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+
 interface CalendarProps {
   role?: string;
 }
@@ -30,6 +31,12 @@ export const Calendar = ({ role }: CalendarProps) => {
 
   const [eventToDelete, setEventToDelete] = useState<any | null>(null);
   const router = useRouter();
+
+  const adjustTimezone = (dateString: string) => {
+    const date = new Date(dateString);
+    date.setHours(date.getHours() - 3);
+    return date.toISOString();
+  };
 
   const fetchTasksAndEvents = async () => {
     try {
@@ -55,8 +62,8 @@ export const Calendar = ({ role }: CalendarProps) => {
           title: task.title,
           description: task.description,
           people: [task.professor?.name || "Desconhecido"],
-          start: eventDate.toISOString(),
-          end: eventDate.toISOString(),
+          start: adjustTimezone(eventDate.toISOString()),
+          end: adjustTimezone(eventDate.toISOString()),
           isEvent: false,
         };
       });
@@ -67,14 +74,13 @@ export const Calendar = ({ role }: CalendarProps) => {
           title: event.title,
           description: event.description,
           location: event.location,
-          start: new Date(event.startDate).toISOString(),
-          end: new Date(event.endDate).toISOString(),
+          start: adjustTimezone(new Date(event.startDate).toISOString()),
+          end: adjustTimezone(new Date(event.endDate).toISOString()),
           isEvent: true,
         };
       });
 
       const combined = [...tasks, ...events];
-
       calendarApp.eventsService.set(combined);
     } catch (error) {
       console.error("Erro ao carregar tarefas e eventos:", error);
@@ -131,7 +137,7 @@ export const Calendar = ({ role }: CalendarProps) => {
 
   useEffect(() => {
     fetchTasksAndEvents();
-  }, [fetchTasksAndEvents]);
+  }, []);
 
   return (
     <div>

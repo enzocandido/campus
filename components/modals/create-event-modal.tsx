@@ -112,7 +112,7 @@ export const CreateEventModal = () => {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
+                    <FormLabel className="hidden md:inline-block uppercase text-xs font-bold text-zinc-500">
                       Título*
                     </FormLabel>
                     <FormControl>
@@ -120,48 +120,6 @@ export const CreateEventModal = () => {
                         disabled={isLoading}
                         className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
                         placeholder="Insira o nome do evento"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
-                      Descrição
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
-                        placeholder="Adicione uma descrição"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500">
-                      Local
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={isLoading}
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
-                        placeholder="Local do evento"
                         {...field}
                       />
                     </FormControl>
@@ -227,6 +185,47 @@ export const CreateEventModal = () => {
                             <Calendar className="absolute left-52 top-1/2 transform -translate-y-1/2 w-6 h-6 text-zinc-500" />
                           </div>
                         )}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="hidden md:inline-block uppercase text-xs font-bold text-zinc-500">
+                      Descrição
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
+                        placeholder="Adicione uma descrição"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="hidden md:inline-block uppercase text-xs font-bold text-zinc-500">
+                      Local
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black"
+                        placeholder="Local do evento"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />

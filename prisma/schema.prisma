@@ -228,6 +228,7 @@ model Submission {
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   graded   Boolean @default(false)
+  status   String?
   feedback String?
 
   createdAt DateTime @default(now()) @map("created_at")

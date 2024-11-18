@@ -3,9 +3,9 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { submissionId, feedback, graded } = await req.json();
+    const { submissionId, feedback, status, graded } = await req.json();
 
-    if (!submissionId || typeof graded !== "boolean") {
+    if (!submissionId || !status || typeof graded !== "boolean") {
       return NextResponse.json(
         { error: "Parâmetros inválidos ou incompletos." },
         { status: 400 },
@@ -16,6 +16,7 @@ export async function POST(req: Request) {
       where: { id: submissionId },
       data: {
         feedback,
+        status,
         graded,
       },
     });

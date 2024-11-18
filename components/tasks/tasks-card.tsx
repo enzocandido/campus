@@ -34,6 +34,9 @@ import {
   Send,
   Trash,
   User,
+  ThumbsUp,
+  ThumbsDown,
+  MessageSquare,
 } from "lucide-react";
 import { useModal } from "@/hooks/use-modal-store";
 
@@ -46,38 +49,29 @@ interface TasksCardProps {
   className: string;
   professor: string;
   status: "pending" | "expired";
+  feedback?: string;
+  grade?: "approved" | "rejected";
   userRole: string;
   isSubmitted: boolean;
+  isGraded: boolean;
 }
 
-export function TasksCard({
-  id,
-  title,
-  description,
-  fileUrl,
-  dueDate,
-  className,
-  professor,
-  status,
-  userRole,
-  isSubmitted,
-}: TasksCardProps) {
+export function TasksCard(props: TasksCardProps) {
   const { onOpen } = useModal();
-  const taskId = id;
   const [isExpanded, setIsExpanded] = useState(false);
-  const fileType = fileUrl?.split(".").pop();
+  const fileType = props.fileUrl?.split(".").pop();
   const isPDF = fileType === "pdf";
-  const isImage = !isPDF && !!fileUrl;
+  const isImage = !isPDF && !!props.fileUrl;
 
-  const formattedDueDate = format(new Date(dueDate), "dd/MM/yyyy");
-  const isOverdue = new Date(dueDate) < new Date();
+  const formattedDueDate = format(new Date(props.dueDate), "dd/MM/yyyy");
+  const isOverdue = new Date(props.dueDate) < new Date();
 
   const handleSubmitTask = () => {
-    onOpen("sendTask", { taskId });
+    onOpen("sendTask", { taskId: props.id });
   };
 
   const handleDeleteTask = () => {
-    onOpen("deleteTask", { taskId });
+    onOpen("deleteTask", { taskId: props.id });
   };
 
   return (
@@ -86,11 +80,11 @@ export function TasksCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="overflow-hidden border-none">
+      <Card className="overflow-hidden border-none shadow-md">
         <CardHeader className="pb-2">
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-xl mb-1">{title}</CardTitle>
+              <CardTitle className="text-xl mb-1">{props.title}</CardTitle>
               <CardDescription className="text-sm">
                 <TooltipProvider>
                   <Tooltip>
@@ -108,7 +102,7 @@ export function TasksCard({
               </CardDescription>
             </div>
             <div className="flex items-center space-x-2">
-              {userRole === "PROFESSOR" ? (
+              {props.userRole === "PROFESSOR" ? (
                 <Button
                   variant="destructive"
                   size="sm"
@@ -119,7 +113,7 @@ export function TasksCard({
                 </Button>
               ) : (
                 <>
-                  {isSubmitted ? (
+                  {props.isSubmitted ? (
                     <Button
                       variant="outline"
                       size="sm"
@@ -166,17 +160,17 @@ export function TasksCard({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="space-y-2 pt-2">
+            <div className="space-y-4 pt-2">
               <p className="text-sm text-muted-foreground">
-                {description || "Nenhuma descrição disponível."}
+                {props.description || "Nenhuma descrição disponível."}
               </p>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <User className="h-4 w-4" />
-                <span>{professor}</span>
+                <span>{props.professor}</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Book className="h-4 w-4" />
-                <span>{className}</span>
+                <span>{props.className}</span>
               </div>
               {isImage && (
                 <Dialog>
@@ -190,13 +184,15 @@ export function TasksCard({
                       <DialogTitle>Imagem da tarefa</DialogTitle>
                     </DialogHeader>
                     <div className="relative aspect-video">
-                      <Image
-                        src={fileUrl}
-                        alt={`Imagem sobre ${title}`}
-                        layout="fill"
-                        objectFit="contain"
-                        className="rounded-md"
-                      />
+                      {props.fileUrl && (
+                        <Image
+                          src={props.fileUrl}
+                          alt={`Imagem sobre ${props.title}`}
+                          layout="fill"
+                          objectFit="contain"
+                          className="rounded-md"
+                        />
+                      )}
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -205,13 +201,44 @@ export function TasksCard({
                 <div className="flex items-center p-2 rounded-md bg-secondary">
                   <FileIcon className="h-6 w-6 text-primary" />
                   <a
-                    href={fileUrl}
+                    href={props.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="ml-2 text-sm text-primary hover:underline"
                   >
                     Baixar PDF
                   </a>
+                </div>
+              )}
+              {/* Improved Feedback Section */}
+              {props.isSubmitted && props.isGraded && (
+                <div className="pt-4 border-t border-border">
+                  <h3 className="text-lg font-semibold mb-2">
+                    Feedback do Professor
+                  </h3>
+                  <div className="bg-secondary p-4 rounded-lg">
+                    <div className="flex items-center mb-2">
+                      <Badge
+                        variant={
+                          props.grade === "approved" ? "default" : "destructive"
+                        }
+                        className="mr-2"
+                      >
+                        {props.grade === "approved" ? (
+                          <ThumbsUp className="h-4 w-4 mr-1" />
+                        ) : (
+                          <ThumbsDown className="h-4 w-4 mr-1" />
+                        )}
+                        {props.grade === "approved" ? "Aprovado" : "Reprovado"}
+                      </Badge>
+                    </div>
+                    {props.feedback && (
+                      <div className="flex items-start space-x-2">
+                        <MessageSquare className="h-5 w-5 text-muted-foreground mt-0.5" />
+                        <p className="text-sm">{props.feedback}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
