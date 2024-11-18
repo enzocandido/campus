@@ -10,7 +10,7 @@ const Tasks = async () => {
   }
 
   return (
-    <div>
+    <div className="pb-8">
       <TasksHeader />
       <TasksGrid userRole={profile.academicRole} userId={profile.id} />
     </div>

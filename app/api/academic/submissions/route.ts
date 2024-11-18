@@ -26,6 +26,7 @@ export async function GET() {
         taskId: true,
         graded: true,
         feedback: true,
+        createdAt: true,
       },
     });
 
