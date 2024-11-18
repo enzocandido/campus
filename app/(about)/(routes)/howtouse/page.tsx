@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Book, Users, Calendar, MessageSquare, HelpCircle } from "lucide-react";
+import { Book, Users, Calendar, MessageSquare } from "lucide-react";
 
 const HowToUse = () => {
   const faqs = [

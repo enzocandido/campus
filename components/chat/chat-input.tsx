@@ -13,7 +13,6 @@ import { Plus, Send } from "lucide-react";
 import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "../emoji-picker";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
 
 interface ChatInputProps {
   apiUrl: string;

@@ -1,6 +1,5 @@
 "use client";
 
-import qs from "query-string";
 import { useState } from "react";
 import axios from "axios";
 
